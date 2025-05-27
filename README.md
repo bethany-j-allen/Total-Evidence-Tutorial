@@ -41,7 +41,7 @@ We will be using R to analyze the outputs of our analyses. RStudio provides a us
 
 # Practical: Total Evidence Tutorial
 
-In this tutorial we will infer a phylogeny using a combination of both morphological and genetic data for the Osmundaceae, or "Royal Fern", family of plants. 
+In this tutorial we will infer a phylogeny for the Osmundaceae, or "Royal Fern", family of plants, using a combination of both morphological and genetic data. 
 
 The aim of this tutorial is to:
 - Learn how to read morphological data into BEAST2;
@@ -50,7 +50,15 @@ The aim of this tutorial is to:
 
 ## The data
 
+The dataset we are using was published by {% cite Grimm2015 --file Total-Evidence-Tutorial/master-refs.bib %}. They used the dataset to investigate the impact of clock model choices on phylogenetic inference, between analyses conducted via "node dating" in BEAST2, "total-evidence dating" in MrBayes and "fossilised birth-death" dating in FDPPDiv.
+
+The dataset describes 33 "operational taxonomic units", or biological entities which lie at the tips of our phylogeny. These include four species of _Leptopteris_, and three species of _Todea_, with the remaining tips belonging to the genus _Osmunda_. Most are independent species, while four are individuals which all belong to _Osmunda cinnamomea_: fossils from the Cretaceous of Canada, and the Neogene of Japan and the USA, alongside a genetic sequence for living _Osmunda cinnamomea_, each of which are represented as separate tips.
+
+We will now explore the nuances of our two data input files.
+
 ### Genetic sequences
+
+
 
 ### Morphological data
 
