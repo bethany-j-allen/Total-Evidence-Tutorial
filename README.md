@@ -39,7 +39,14 @@ We will be using R to analyze the outputs of our analyses. RStudio provides a us
 
 ----
 
-# Practical: Skyline analyses for macroevolution
+# Practical: Total Evidence Tutorial
+
+In this tutorial we will infer a phylogeny using a combination of both morphological and genetic data for the Osmundaceae, or "Royal Fern", family of plants. 
+
+The aim of this tutorial is to:
+- Learn how to read morphological data into BEAST2;
+- Understand the differences between how BEAST2 treats morphological and genetic data;
+- Practise visualising total-evidence phylogenies.
 
 ## The data
 
