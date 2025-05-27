@@ -9,13 +9,15 @@ tracerversion: 1.7.x
 
 # Background
 
+In macroevolution, phylogenies provide a hypothesised roadmap describing the relationships between species (or higher taxa) and the timing of their divergences. Typically we aim to infer the most complete and accurate phylogeny possible, to obtain a reliable picture of the tempo and mode of evolution in that clade. Genetic sequences have become relatively easy to obtain for living species, particularly through openly accessible databases such as [NCBI Genbank](https://www.ncbi.nlm.nih.gov/genbank/). While the fossil record can provide us with valuable insights into species in deeper time, we cannot obtain genetic sequences for these species, and to integrate them into phylogenies we must instead rely on their morphological characteristics. Phylogenetic approaches which combine both genetic and morphological data (and typically both extant and extinct species) are known as **total-evidence** methods {% cite Ronquist2012 Zhang2016 --file Total-Evidence-Tutorial/master-refs.bib %}. Here we will demonstrate how to infer a total-evidence phylogeny using the fossilized birth death (FBD) model in BEAST2.
+
 ----
 
 # Programs used in this Exercise 
 
 ### BEAST2 - Bayesian Evolutionary Analysis Sampling Trees 2
 
-[BEAST2](http://www.beast2.org) is a free software package for Bayesian evolutionary analysis of molecular sequences using MCMC and strictly oriented toward inference using rooted, time-measured phylogenetic trees {% cite Bouckaert2014 --file Skyline-analyses-for-macroevolution/master-refs.bib %}. This tutorial uses the BEAST v{{ page.beastversion }}.
+[BEAST2](http://www.beast2.org) is a free software package for Bayesian evolutionary analysis of molecular sequences using MCMC and strictly oriented toward inference using rooted, time-measured phylogenetic trees {% cite Bouckaert2014 --file Total-Evidence-Tutorial/master-refs.bib %}. This tutorial uses the BEAST v{{ page.beastversion }}.
 
 ### BEAUti - Bayesian Evolutionary Analysis Utility
 
@@ -39,10 +41,15 @@ We will be using R to analyze the outputs of our analyses. RStudio provides a us
 
 # Practical: Skyline analyses for macroevolution
 
-
 ## The data
 
-## Install BEAST2 packages
+### Genetic sequences
+
+### Morphological data
+
+## Creating the Analysis Files with BEAUti
+
+### Install BEAST2 packages
 
 <figure>
 	<a id="fig:1"></a>
@@ -54,10 +61,17 @@ We will be using R to analyze the outputs of our analyses. RStudio provides a us
 >
 >Install the **BDSKY** and **feast** packages by selecting them and clicking the **Install/Upgrade** button one at a time.
 
-### Creating the Analysis Files with BEAUti
+### Importing the data
 
+### Setting initial tip ages
 
-### The Fossilised-Birth-Death model results
+### Priors
+
+### Adding tip age priors
+
+### Setting up MCMC
+
+## Examining the results
 
 We can now examine the results of our **fossilised-birth-death** model. Again, we need to read in the relevant log file and trim off the first 10% as burn-in.
 
