@@ -84,6 +84,30 @@ We will now explore the nuances of our two data input files.
 
 ### Adding tip age priors
 
+
+| Fossil tip | Age uncertainty |
+| --- | --- |
+| _Todea tidwelli_ | 129--140 |
+| _Osmunda cinnamomea_ Neogene USA | 16 |
+| _Osmunda cinnamomea_ Neogene Japan | 12--14 |
+| _Osmunda cinnamomea_ Cretaceous Canada | 72--83 |
+| _Osmunda precinnamomea_ | 56--66 |
+| _Osmunda chengii_ | 145--160 |
+| _Osmunda bromeliaefolia_ | 11--14 |
+| _Osmunda arnoldii_ | 56--66 |
+| _Osmunda dowkeri_ | 56--59 |
+| _Osmunda ilianensis_ | 4--6 |
+| _Osmunda oregonensis_ | 34--40 |
+| _Osmunda pluma_ | 56--66 |
+| _Osmunda shimokawaensis_ | 12--14 |
+| _Osmunda wehrii_ | 16 |
+| _Osmunda pulchella_ | 183--185 |
+| _Osmunda liaoningensis_ | 153--165 |
+| _Osmunda wangii_ | 153--165 |
+| _Osmunda plumites_ | 153--165 |
+---
+
+
 ### Setting up MCMC
 
 ## Examining the results
