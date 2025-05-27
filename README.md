@@ -54,11 +54,15 @@ The dataset we are using was published by {% cite Grimm2015 --file Total-Evidenc
 
 The dataset describes 33 "operational taxonomic units", or biological entities which lie at the tips of our phylogeny. These include four species of _Leptopteris_, and three species of _Todea_, with the remaining tips belonging to the genus _Osmunda_. Most are independent species, while four are individuals which all belong to _Osmunda cinnamomea_: fossils from the Cretaceous of Canada, and the Neogene of Japan and the USA, alongside a genetic sequence for living _Osmunda cinnamomea_, each of which are represented as separate tips.
 
-We will now explore the nuances of our two data input files.
+We will now explore the nuances of our two data input files: these are _Osmundaceae dna.nex_ for our genetic sequences, and _Osmundaceae morph.nex_ for our morphological data.
 
 ### Genetic sequences
 
+First we will open the nexus file containing the genetic sequences in our text editor, to take a look at what the file contains. 
 
+>Open _Osmundaceae dna.nex_ in **Sublime Text** (or your preferred text editor).
+
+On the first line, we see a tag denoting that our file is of the `nexus` type. We then begin a `block` which is called `data`. The data dimensions are described, stating that `ntax=33` and `nchar=8628`, denoting that we have sequences with a length of 8628 base pairs for each of 33 OTUs, or tips. We are then given some information about the formatting of the sequences.
 
 ### Morphological data
 
