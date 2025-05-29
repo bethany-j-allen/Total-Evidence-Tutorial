@@ -58,13 +58,35 @@ We will now explore the nuances of our two data input files: these are _Osmundac
 
 ### Genetic sequences
 
-First we will open the nexus file containing the genetic sequences in our text editor, to take a look at what the file contains. 
+First we will open the `nexus` file containing the genetic sequences in our text editor, to take a look at what the file contains. 
 
->Open _Osmundaceae dna.nex_ in **Sublime Text** (or your preferred text editor).
+>Open `Osmundaceae_dna.nex` in your preferred text editor.
 
-On the first line, we see a tag denoting that our file is of the `nexus` type. We then begin a `block` which is called `data`. The data dimensions are described, stating that `ntax=33` and `nchar=8628`, denoting that we have sequences with a length of 8628 base pairs for each of 33 OTUs, or tips. We are then given some information about the formatting of the sequences.
+On the first line, we see a tag denoting that our file is of the `nexus` type. We then begin a `block` which is called `data`. The data dimensions are described, stating that `ntax = 33` and `nchar = 8628`, denoting that we have sequences with a length of 8628 base pairs for each of 33 OTUs, or tips. We are then given some information about the formatting of the sequences. The type of data is stated to be "dna". "Gaps" in the data are denoted using `-`, while "missing" values are denoted using `?`.
+
+Following this header, the data itself is presented, following the tag `matrix`. Each tip label is stated, giving the name of the tip and a number (more on this later), followed by the genetic sequence associated with the OTU. The first is `Leptopteris_fraseri_0`. For this tip, we can see values of G, C, A and T corresponding to our DNA base reads, interspersed with blocks of question marks corresponding to sections of the DNA strand which could not be sequenced.
+
+Scrolling down to the bottom, we see that `Osmunda_plumites_160` has a sequence which only consists of question marks. This is because _Osmunda plumites_ is one of our fossil tips. While we do not have a genetic sequence for this species, it must still be included in our nexus file containing the genetic sequences, but in a way which informs our model that we do not know the DNA bases that a sample from this species would contain.
+
+To complete the file, the phrase `end;` is used to denote the end of the `data` block. No other blocks are needed. This example file shows one of the simplest ways of formatting a `nexus` file for input into BEAST2; if issues are encountered when reading your own sequence data into BEAST2, it is recommended to use the simplest possible formatting which still encodes the data.
 
 ### Morphological data
+
+We will now look at the `nexus` file containing the morphological data for comparison.
+
+>Open `Osmundaceae_morph.nex` in your preferred text editor.
+
+The first thing to note is that the overall format of the `nexus` file is very similar to that for our DNA sequences. We see a header, followed by a matrix. However, it is clear that this file is much shorter. For each our DNA sequences we had a total of 8628 characters, but here we can see that `nchar = 25`. This means that our morphological data encodes 25 different traits possessed by each of our tips.
+
+This time, the data format is described as "standard" rather than "dna". When using a "dna" format, we automatically determine that our sequences will consist of the letters G, C, A and T. But for this "standard" format, there is no clear character convention, and so we must describe which characters are contained within the matrix. This is done here using `symbols = "012"`. This means that the digits 0, 1 and 2 are used to denote the different character states, with no other characters present in the matrix. We therefore know that in this dataset, any single character can only have a maximum of three possible states. As with the DNA sequences, gaps and missing data are denoted using `-` and `?` respectively.
+
+Beneath this, again, we see the name of each OTU followed by its character states for each trait. This time, no tip has only question marks, so we have at least some morphological data for every tip. But overall, there are still a high number of question marks spread across the dataset, with unknown states making up a larger proportion of the data compared to the DNA. For example, we can see that for `Todea_papuana_0`, only five of the characters are coded, with all other states unknown.
+
+Another thing to note is that not all of our morphological "sequences" are the same length. This is because some contain bracketed pairs of values. For example, we see that `Osmunda_cinnamomea_0` contains two, the first being `{1 2}`, and the second being `{0 1}`. Here, we are denoting *ambiguity*. For these particular characters, we are telling the model that the value could be either of these two states. It is important to note that the model will interpret this information to mean that the state could be *either one* of these values, *not both*. If the morphological character in question was not coded with this information in mind, you risk violating the model of morphological evolution.
+
+The original dataset used by {% cite Grimm2015 --file Total-Evidence-Tutorial/master-refs.bib %} contained 33 morphological characters. However, eight of these were *invariant*, meaning that all of the OTUs had the same character state. BEAST2 currently will not accept morphological data containing invariant sites; if you attempt to read a morphological dataset containing invariant sites into BEAUti, you will get an error stating that this is not possible. For the purposes of this tutorial, we removed these invariant characters from the dataset, but this is something you may need to conduct yourself if attempting to read a dataset into BEAUti which was not originally set up for BEAST2.
+
+Here we have highlighted a handful of ways in which morphological data must be carefully formatted to be compatible with BEAST2. Different phylogenetic inference software use different models for morphological character evolution, and it is important to bear in mind the relationship between the morphological dataset design and the assumptions made by the model in your software of choice.
 
 ## Creating the Analysis Files with BEAUti
 
