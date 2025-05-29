@@ -84,13 +84,15 @@ Beneath this, again, we see the name of each OTU followed by its character state
 
 Another thing to note is that not all of our morphological "sequences" are the same length. This is because some contain bracketed pairs of values. For example, we see that `Osmunda_cinnamomea_0` contains two, the first being `{1 2}`, and the second being `{0 1}`. Here, we are denoting *ambiguity*. For these particular characters, we are telling the model that the value could be either of these two states. It is important to note that the model will interpret this information to mean that the state could be *either one* of these values, *not both*. If the morphological character in question was not coded with this information in mind, you risk violating the model of morphological evolution.
 
-The original dataset used by {% cite Grimm2015 --file Total-Evidence-Tutorial/master-refs.bib %} contained 33 morphological characters. However, eight of these were *invariant*, meaning that all of the OTUs had the same character state. BEAST2 currently will not accept morphological data containing invariant sites; if you attempt to read a morphological dataset containing invariant sites into BEAUti, you will get an error stating that this is not possible. For the purposes of this tutorial, we removed these invariant characters from the dataset, but this is something you may need to conduct yourself if attempting to read a dataset into BEAUti which was not originally set up for BEAST2.
-
 Here we have highlighted a handful of ways in which morphological data must be carefully formatted to be compatible with BEAST2. Different phylogenetic inference software use different models for morphological character evolution, and it is important to bear in mind the relationship between the morphological dataset design and the assumptions made by the model in your software of choice.
 
 ## Creating the Analysis Files with BEAUti
 
+We will now start creating our BEAST2 model in BEAUti.
+
 ### Install BEAST2 packages
+
+The first step to creating our model is ensuring that we have all of the BEAST2 packages we need.
 
 <figure>
 	<a id="fig:1"></a>
@@ -100,11 +102,59 @@ Here we have highlighted a handful of ways in which morphological data must be c
 
 >Open the **BEAST2 Package Manager** by navigating to **File > Manage Packages**.
 >
->Install the **BDSKY** and **feast** packages by selecting them and clicking the **Install/Upgrade** button one at a time.
+>Install the **sa** packages by selecting it and clicking the **Install/Upgrade** button.
+>
+>Close and restart **BEAUti**.
 
 ### Importing the data
 
+First, we will load in our genetic data. This should be familiar to you if you have completed any of the other tutorials.
+
+>Navigate to **File > Import Alignment**. Select `Osmundaceae_dna.nex` and select **Open**.
+
+We can now see this dataset listed in our **Partitions** tab. We can see that the dataset contains 33 **Taxa** and 8628 **Sites**, and has the **Data Type** "nucleotide": this corresponds to the information we saw in the `nexus` header, so it seems the data have been read in correctly.
+
+Next, we will read in our morphological data.
+
+>Navigate to **File > Add Morphological Data**. Select `Osmundaceae_morph.nex` and select **Open**.
+
+We now see a window asking whether we would like to "condition on recording variable characters only (Mkv)". This choice determines how the model treats the data with respect to **invariant sites**.
+
+What does this mean? We will start by considering our DNA sequences. Here, our data represent a complete sequence for each OTU, telling us which DNA base has been read at each position in the sequence (except for where we have missing values, but these are also included in the matrix, with a "?"). Imagine that for the first base in our sequences, all of the OTUs have the value "A". To use the technical term, this site is **invariant**. If all of the OTUs have the same value, we cannot use this particular position in the sequences to place the tips into two or more subgroups, and therefore to put our tips into clusters to inform the phylogenetic topology: it is **phylogenetically uninformative**. However, invariant sites can be very important with regards to **time**. We know that invariant sites have probably never changed state across any of our branches throughout the course of the evolutionary process we are modelling. When we infer a per-site rate of substitution across our sequences, invariant sites make up an important part of this calculation.
+
+Now let's translate this thinking to morphological data. What do these data represent? Each character describes a specific trait, with the values given to each tip denoting the state in which that character exists in that OTU. The meaning of our morphological characters and states are much less rigid than for our genetic data. The most relevant manifestation of this point here is that it is much easier to describe and code characters which differ between our OTUs, in comparison with characteristics that are shared by all of them. This means that morphological datasets are typically biased towards morphological characters which vary, with many not containing **any** invariant characters. This is known as **ascertainment bias**. As we mentioned for the genetic data, invariant characters form an important part of the calculation of per-character rates of change, but these are not captured in our dataset. Because of this, phylogenetic models have been adapted to correct for the non-sampling of invariant sites in morphological data. This is termed the **MKv** model of morphological character evolution.
+
+The original Osmundaceae dataset used by {% cite Grimm2015 --file Total-Evidence-Tutorial/master-refs.bib %} actually contained 33 morphological characters, with eight of these being **invariant**. However, because of the rarity of having this information in datasets, BEAST2 currently will not accept morphological data containing invariant sites; if you attempt to read a morphological dataset containing invariant sites into BEAUti, you will get an error stating that this is not possible. For the purposes of this tutorial, we removed these invariant characters from the dataset for you, but this is something you may need to conduct yourself if attempting to read a dataset into BEAUti which was not originally set up for BEAST2.
+
+To put this knowledge into action, we now know that our dataset does not include invariant sites, and so we would like to use the **Mkv** model to correct for ascertainment bias.
+
+>Select **Yes** to conditioning on variable characters.
+
+We can see that we now have three data partitions in the **Partitions** tab. Beneath our genetic data, our morphological dataset has been split into two. `Osmundaceae_morph2` contains 21 sites, and `Osmundaceae_morph3` contains 9 sites. Each partition has its own site model, and we will leave this setting to the default. We will discuss what this means when we set up the **Site model** tab.
+
+Next we will take a look at the clock models. For now, we can see that we have one clock for the DNA sequences, named `Osmundaceae_dna`, and a second which is used for both of the morphological partitions, named `Osmundaceae_morph`. This means that we consider all of our morphological data to have evolved under the same clock, with a unified rate. This seems a reasonable assumption, so we will leave this setting to the default.
+
+The last thing we need to look at in this tab is the tree settings. We want to infer a single tree which is informed by both the genetic and morphological data, so we will link all three trees.
+
+>In the **Tree** column, click on the name **Osmundaceae_dna**. Type in **tree** and hit enter. Using the drop-down menus, change the tree to **tree** for both of the morphological partitions.
+
+We are now ready to move onto our tip date settings.
+
 ### Setting initial tip ages
+
+We know that our dataset contains both living and extinct species, which means that we have tips which were sampled through time. As a result, we need to give the model this information.
+
+>Select the **Tip Dates** tab, and check the box to **Use tip dates**.
+
+We now see a table which lists the tip names, along with **Date** and **Age/Height** values. At present these latter two columns are currently all zero values. These values correspond to the **initial** ages these tips will have: for some they will be sampled and inferred over the course of the MCMC, but we will come back to this point later.
+
+While it is possible to enter these age values manually, it is easier to specify them within our `nexus` file, which is what we have done here. Each tip label ends with an underscore followed by a number, and this number is the age, in millions of years, which we would like for the initial age of that tip. We will read these into the table.
+
+>Ensure that the switch at the top for **Dates specified** is set to **numerically as... year**. Change the second drop-down menu from **Since some time in the past** to **Before the present**. Then select **Auto-configure**.
+>
+>Ensure that the switch is set to **use everything**. Change the drop-down to **after last**, and ensure that the text box contains a single underscore, `_`. Select **OK**.
+
+The **Date** and **Age/Height** values should now be repopulated using the numbers in the tip labels.
 
 ### Priors
 
