@@ -76,7 +76,7 @@ We will now look at the `nexus` file containing the morphological data for compa
 
 >Open `Osmundaceae_morph.nex` in your preferred text editor.
 
-The first thing to note is that the overall format of the `nexus` file is very similar to that for our DNA sequences. We see a header, followed by a matrix. However, it is clear that this file is much shorter. For each our DNA sequences we had a total of 8628 characters, but here we can see that `nchar = 25`. This means that our morphological data encodes 25 different traits possessed by each of our tips.
+The first thing to note is that the overall format of the `nexus` file is very similar to that for our DNA sequences. We see a header, followed by a matrix. However, it is clear that this file is much shorter. For each of our DNA sequences we had a total of 8628 characters, but here we can see that `nchar = 25`. This means that our morphological data encodes 25 different traits possessed by each of our tips.
 
 This time, the data format is described as "standard" rather than "dna". When using a "dna" format, we automatically determine that our sequences will consist of the letters G, C, A and T. But for this "standard" format, there is no clear character convention, and so we must describe which characters are contained within the matrix. This is done here using `symbols = "012"`. This means that the digits 0, 1 and 2 are used to denote the different character states, with no other characters present in the matrix. We therefore know that in this dataset, any single character can only have a maximum of three possible states. As with the DNA sequences, gaps and missing data are denoted using `-` and `?` respectively.
 
@@ -155,6 +155,32 @@ While it is possible to enter these age values manually, it is easier to specify
 >Ensure that the switch is set to **use everything**. Change the drop-down to **after last**, and ensure that the text box contains a single underscore, `_`. Select **OK**.
 
 The **Date** and **Age/Height** values should now be repopulated using the numbers in the tip labels.
+
+### Site models
+
+We will now set up the site models. These models describe the evolutionary processes which we think govern the changing of states in both our molecular and morphological datasets, so it is particularly important to understand the choices we are making in this tab when setting up a total-evidence analysis.
+
+>Select the **Site Model** tab.
+
+We can see that our three partitions are listed in the table on the left, with the genetic data listed first. Here we will keep this model simple, but we recommend dipping into the other tutorials for more advice on how to set up site models for genetic sequence data.
+
+>Set the **Gamma Category Count** to **4**, leaving the settings for the shape of the gamma distribution to the defaults. Check the box to **estimate** the **Proportion invariant**. Change the substitution model to **HKY**, leaving the initial **Kappa** value at **2.0** but **estimated**, as well as the **Frequencies**.
+>
+>Select **Osmundaceae_morph2** in the left-hand table.
+
+We can now begin thinking about our model(s) of morphological evolution. We can see that the default **Subst Model** is the **Lewis MK**. At present this is the only model of morphological evolution available in BEAST2. (If you check the drop-down for this box, there is also the option of a **Mutation Death Model**. This is a **Dollo model**, which handles exclusively binary character states. It is configured specifically for word matrices used in language evolution, so we will not discuss this model further here.)
+
+In brief, what is the Lewis MK model? For those who are familiar with genetic substitution models, it is the morphological equivalent of the Jukes-Cantor 69 model. The model assumes that all character state transitions are just as likely as each other. For genetic sequences, this means that an A base is equally likely to transition to a G, C, or T.
+
+In morphological evolution, this means several important things. Our Lewis MK model assumes that the transition from 0 to 1 is just as likely as the transition from 1 to 0. If a character represents whether a complex evolutionary feature is present or not, our transitions therefore represent acquisition and loss. We might think it is much harder to lose such a character than to gain it: that would be a violation of this model. Further, the model assumes that, for example, the transition from 0 to 1 is just as likely as the transition from 0 to 2. This means that we assume character states have been coded as independent entities, but if these states are actually ordered (0 must transition to 1, then 1 must transition to 2), this is also a violation of the model. Understanding how the morphological characters have been coded, and whether any violations exist between these thought processes and the way in which the site model operates, is therefore fundamental to determining how well the site model will perform, and potentially how accurate our inferred phylogeny is.
+
+Now we can return to our earlier question: why was the morphological data split into two partitions? Under the Lewis MK model, we know that for each morphological character, our transition matrix is dependent on the number of states which that character can take. As a result, `Osmundaceae_morph2` contains all characters with two possible states, and `Osmundaceae_morph3` contains all characters with three possible states. In order to determine these partitions, BEAST2 automatically uses the number of character states present in the dataset for each character. This means that if a character is only represented by 0 or 1 in the dataset, BEAST2 assumes that there is no "secret" state 2.
+
+We now need to set up our morphological site model parameters. When we read in the dataset, we already told the model that there are no invariant sites, so we can leave the **Proportion invariant** blank. Because this dataset is so small, we will set our gamma category count to 2.
+
+>Set the **Gamma Category Count** to **2**, leaving the settings for the shape of the gamma distribution to the defaults.
+>
+>Select **Osmundaceae_morph3** in the left-hand table, again setting the **Gamma Category Count** to **2**.
 
 ### Priors
 
