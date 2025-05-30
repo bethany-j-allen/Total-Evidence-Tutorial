@@ -206,7 +206,7 @@ We can now move on to our FBD parameters. First, we will consider the origin tim
 
 Here we can see that the default prior is a **uniform distribution** between 0 and infinity, with a starting value of 100. Practically, this means that the only constraint being placed on our phylogeny is that the root has to be older than the age of our oldest fossil tip - our **Tip Dates** tab tells us that the oldest starting tip age is 184 million years ago.
 
-It is important for us to choose a more meaningful prior here, to ensure that the timescale of our phylogeny fits our prior knowledge. For example, we can check the [Paleobiology Database](https://paleobiodb.org/#/), a large open-access database of fossil occurrences. A search for the family **Osmundaceae** tells us that the oldest fossils in the database are from the [Carboniferous](https://paleobiodb.org/classic/basicTaxonInfo?taxon_no=54780), which corresponds to an age of around 360 to 300 million years ago. This is substantially older than the oldest fossil in our phylogeny. It is also older than the root age inferred in the original paper by {% cite Grimm2015 --file Total-Evidence-Tutorial/master-refs.bib %}, which corresponds to the Permian-Triassic boundary, 250 million years ago. To permit all of these options but exclude more extreme values, we will change the limits on our **uniform distribution** to correspond to the start of the Carboniferous, and the middle of the Permian.
+It is important for us to choose a more meaningful prior here, to ensure that the timescale of our phylogeny fits our prior knowledge. For example, we can check the [Paleobiology Database](https://paleobiodb.org/#/), a large open-access database of fossil occurrences. A search for the family **Osmundaceae** tells us that the oldest fossils in the database are from the [Carboniferous](https://paleobiodb.org/classic/basicTaxonInfo?taxon_no=54780), which corresponds to an age of around 360 to 300 million years ago. This is substantially older than the oldest fossil in our phylogeny. It is also older than the root age inferred in the original paper by {% cite Grimm2015 --file Total-Evidence-Tutorial/master-refs.bib %}, which corresponds to the Permian-Triassic boundary, 250 million years ago. To permit all of these options but exclude more extreme values, we will change the limits on our **uniform distribution** to correspond to the start of the Carboniferous, and the middle of the Triassic.
 
 >Change the **Upper** limit of the uniform distribution to **360**, and the **Lower** limit to **230**. Click the **initial = ** button to view the starting values, and change the **Value** to **250**, before clicking **Ok**.
 
@@ -253,6 +253,18 @@ Using this process, you can now enter the tip priors for each of the extinct tip
 >Create a tip age prior for each extinct tip.
 
 ### Setting up MCMC
+
+The last step is to set up our MCMC options.
+
+>Select the **MCMC** tab.
+
+Here we can alter some things.
+
+>Leave all settings at their default values and save the file as `Osmundaceae.xml`.
+
+We are now ready to run our analysis.
+
+>Open BEAST2 and select `Osmundaceae.xml`. Hit **Run** to start the analysis.
 
 ## Examining the results
 
