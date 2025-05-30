@@ -2,7 +2,7 @@
 
 begin data;
 dimensions ntax=33 nchar=25;
-format datatype = standard symbols = "012" gap = - missing =?;
+format datatype=standard symbols="012" gap=- missing=?;
 matrix
 
 Leptopteris_fraseri_0					2000200000001010000001101

@@ -90,22 +90,6 @@ Here we have highlighted a handful of ways in which morphological data must be c
 
 We will now start creating our BEAST2 model in BEAUti.
 
-### Install BEAST2 packages
-
-The first step to creating our model is ensuring that we have all of the BEAST2 packages we need.
-
-<figure>
-	<a id="fig:1"></a>
-	<img style="width:75%;" src="figures/BEAUti packages.png" alt="">
-	<figcaption>Figure 1: The package manager window in BEAUti.</figcaption>
-</figure>
-
->Open the **BEAST2 Package Manager** by navigating to **File > Manage Packages**.
->
->Install the **sa** packages by selecting it and clicking the **Install/Upgrade** button.
->
->Close and restart **BEAUti**.
-
 ### Importing the data
 
 First, we will load in our genetic data. This should be familiar to you if you have completed any of the other tutorials.
@@ -164,25 +148,29 @@ We will now set up the site models. These models describe the evolutionary proce
 
 We can see that our three partitions are listed in the table on the left, with the genetic data listed first. Here we will keep this model simple, but we recommend dipping into the other tutorials for more advice on how to set up site models for genetic sequence data.
 
->Set the **Gamma Category Count** to **4**, leaving the settings for the shape of the gamma distribution to the defaults. Check the box to **estimate** the **Proportion invariant**. Change the substitution model to **HKY**, leaving the initial **Kappa** value at **2.0** but **estimated**, as well as the **Frequencies**.
+>Set the **Gamma Category Count** to **4**, leaving the settings for the shape of the gamma distribution to the defaults. Change the substitution model to **HKY**, leaving the initial **Kappa** value at **2.0** but **estimated**, as well as the **Frequencies**.
 >
 >Select **Osmundaceae_morph2** in the left-hand table.
 
-We can now begin thinking about our model(s) of morphological evolution. We can see that the default **Subst Model** is the **Lewis MK**. At present this is the only model of morphological evolution available in BEAST2. (If you check the drop-down for this box, there is also the option of a **Mutation Death Model**. This is a **Dollo model**, which handles exclusively binary character states. It is configured specifically for word matrices used in language evolution, so we will not discuss this model further here.)
+We can now begin thinking about our model(s) of morphological evolution. We can see that the default **Subst Model** is the **Lewis Mk**. At present this is the only model of morphological evolution available in BEAST2. (If you check the drop-down for this box, there is also the option of a **Mutation Death Model**. This is a **Dollo model**, which handles exclusively binary character states. It is configured specifically for word matrices used in language evolution, so we will not discuss this model further here.)
 
-In brief, what is the Lewis MK model? For those who are familiar with genetic substitution models, it is the morphological equivalent of the Jukes-Cantor 69 model. The model assumes that all character state transitions are just as likely as each other. For genetic sequences, this means that an A base is equally likely to transition to a G, C, or T.
+In brief, what is the Lewis Mk model? For those who are familiar with genetic substitution models, it is the morphological equivalent of the Jukes-Cantor 69 model. The model assumes that all character state transitions are just as likely as each other. For genetic sequences, this means that an A base is equally likely to transition to a G, C, or T.
 
 In morphological evolution, this means several important things. Our Lewis MK model assumes that the transition from 0 to 1 is just as likely as the transition from 1 to 0. If a character represents whether a complex evolutionary feature is present or not, our transitions therefore represent acquisition and loss. We might think it is much harder to lose such a character than to gain it: that would be a violation of this model. Further, the model assumes that, for example, the transition from 0 to 1 is just as likely as the transition from 0 to 2. This means that we assume character states have been coded as independent entities, but if these states are actually ordered (0 must transition to 1, then 1 must transition to 2), this is also a violation of the model. Understanding how the morphological characters have been coded, and whether any violations exist between these thought processes and the way in which the site model operates, is therefore fundamental to determining how well the site model will perform, and potentially how accurate our inferred phylogeny is.
 
-Now we can return to our earlier question: why was the morphological data split into two partitions? Under the Lewis MK model, we know that for each morphological character, our transition matrix is dependent on the number of states which that character can take. As a result, `Osmundaceae_morph2` contains all characters with two possible states, and `Osmundaceae_morph3` contains all characters with three possible states. In order to determine these partitions, BEAST2 automatically uses the number of character states present in the dataset for each character. This means that if a character is only represented by 0 or 1 in the dataset, BEAST2 assumes that there is no "secret" state 2.
+Now we can return to our earlier question: why was the morphological data split into two partitions? Under the Lewis Mk model, we know that for each morphological character, our transition matrix is dependent on the number of states which that character can take. As a result, `Osmundaceae_morph2` contains all characters with two possible states, and `Osmundaceae_morph3` contains all characters with three possible states. In order to determine these partitions, BEAST2 automatically uses the number of character states present in the dataset for each character. This means that if a character is only represented by 0 or 1 in the dataset, BEAST2 assumes that there is no "secret" state 2.
 
-We now need to set up our morphological site model parameters. When we read in the dataset, we already told the model that there are no invariant sites, so we can leave the **Proportion invariant** blank. Because this dataset is so small, we will set our gamma category count to 2.
+We now need to check our morphological site model parameters. When we read in the dataset, we already told the model that there are no invariant sites, so we can leave the **Proportion invariant** blank.
 
->Set the **Gamma Category Count** to **2**, leaving the settings for the shape of the gamma distribution to the defaults.
->
->Select **Osmundaceae_morph3** in the left-hand table, again setting the **Gamma Category Count** to **2**.
+We also need to choose a value for the **Gamma Category Count**. This value determines how many transition rate categories we have, allowing for differences in transition rates between different morphological characters in the matrix. We just set this value to 4 for our molecular data. But as we mentioned before, the nature of morphological data means that we have much more variation in what different morphological characters actually describe than between different sites in a genetic sequence; this might lead us to think that we should allow for more different rate categories for our morphological data. However, we also have a much smaller total number of characters, giving us much less statistical power to actually infer these rate values compared to genetic data. To keep our analysis simple, we will leave the Gamma Category Count values for the morphological data at 0. This means we will calculate a single transition rate for each of the morphological partitions.
 
 ### Priors
+
+Now it's time to set up our priors.
+
+>Select the **Priors** tab.
+
+
 
 ### Adding tip age priors
 
