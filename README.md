@@ -118,9 +118,13 @@ We can see that we now have three data partitions in the **Partitions** tab. Ben
 
 Next we will take a look at the clock models. For now, we can see that we have one clock for the DNA sequences, named `Osmundaceae_dna`, and a second which is used for both of the morphological partitions, named `Osmundaceae_morph`. This means that we consider all of our morphological data to have evolved under the same clock, with a unified rate. This seems a reasonable assumption, so we will leave this setting to the default.
 
-The last thing we need to look at in this tab is the tree settings. We want to infer a single tree which is informed by both the genetic and morphological data, so we will link all three trees.
+The following column defines the tree settings. We want to infer a single tree which is informed by both the genetic and morphological data, so we will link all three trees.
 
 >In the **Tree** column, click on the name **Osmundaceae_dna**. Type in **tree** and hit enter. Using the drop-down menus, change the tree to **tree** for both of the morphological partitions.
+
+Finally, the last column in the table is named **Ambiguities**. Thinking back to when we looked at the morphological data, we saw that some values were indeed ambiguous: the matrix contains brackets where two different possible states are defined. We will tell the model that the morphological data contains ambiguous states.
+
+>Check the **Ambiguities** box for the two morphological partitions, **Osmundaceae_morph2** and **Osmundaceae_morph3**.
 
 We are now ready to move onto our tip date settings.
 
@@ -148,7 +152,7 @@ We will now set up the site models. These models describe the evolutionary proce
 
 We can see that our three partitions are listed in the table on the left, with the genetic data listed first. Here we will keep this model simple, but we recommend dipping into the other tutorials for more advice on how to set up site models for genetic sequence data.
 
->Set the **Gamma Category Count** to **4**, leaving the settings for the shape of the gamma distribution to the defaults. Change the substitution model to **HKY**, leaving the initial **Kappa** value at **2.0** but **estimated**, as well as the **Frequencies**.
+>Check the **estimate** box for **Substitution rate**. Set the **Gamma Category Count** to **4**, leaving the settings for the shape of the gamma distribution to the defaults. Change the substitution model to **HKY**, leaving the initial **Kappa** value at **2.0** but **estimated**, as well as the **Frequencies**.
 >
 >Select **Osmundaceae_morph2** in the left-hand table.
 
@@ -164,16 +168,65 @@ We now need to check our morphological site model parameters. When we read in th
 
 We also need to choose a value for the **Gamma Category Count**. This value determines how many transition rate categories we have, allowing for differences in transition rates between different morphological characters in the matrix. We just set this value to 4 for our molecular data. But as we mentioned before, the nature of morphological data means that we have much more variation in what different morphological characters actually describe than between different sites in a genetic sequence; this might lead us to think that we should allow for more different rate categories for our morphological data. However, we also have a much smaller total number of characters, giving us much less statistical power to actually infer these rate values compared to genetic data. To keep our analysis simple, we will leave the Gamma Category Count values for the morphological data at 0. This means we will calculate a single transition rate for each of the morphological partitions.
 
+### Clock models
+
+The next tab describes our clock models.
+
+>Select the **Clock model** tab.
+
+In the left-hand table, we see our two clocks, one for the genetic data and one for the morphological data. Clicking between them, we can see that for both, the default settings are for a **Strict Clock** with a **Mean clock rate** starting at 1.0, but which is **estimated** during the MCMC. We are dealing with a small phylogeny and a small number of characters, particularly for our morphological data, which are unlikely to provide us with enough information to fit a more complex clock model. We will therefore retain these defaults and use strict clocks.
+
 ### Priors
 
 Now it's time to set up our priors.
 
 >Select the **Priors** tab.
 
+Our first task is to choose our tree prior, which determines the type of evolutionary model we will use, and therefore the type of tree we will infer. We know that our phylogeny contains both extant and extinct tips, and because our datasets are small, we will keep things simple and assume constant evolutionary rates through time. This means that we need to use the **Fossilized Birth-Death Model**.
 
+>In the drop-down box next to **Tree**, select **Fossilized Birth-Death Model**.
+>
+>Click the triangle next to **Tree** to view the additional tree prior options.
+
+Here we see many different options for our model. We can see that the FBD model will be parameterised with a diversification rate, turnover rate, and fossil sampling proportion, each of which will be estimated. We also have a value for **rho**, the proportion of extant tips which are included within the dataset, which is currently fixed at 1.0 (complete extant sampling). At time of writing, [World Flora Online](https://wfoplantlist.org/taxon/wfo-7000000433-2024-12?page=1) considers there to be 28 accepted living species in Osmundaceae. Our dataset contains 15 species dated to the present day (check the number with an age of "0" in the **Tip Dates** tab): we will therefore set the rho value to 15/28 = 0.536.
+
+>Set the **rho** value to **0.536**.
+
+We will leave the remaining tree parameter priors to their defaults.
+
+The next two priors describe the clock rate parameters for the molecular and morphological data. We expect these values to be fairly low, so we will change both to exponential priors with a mean of 1.0.
+
+>In the drop-down box next to **clockRate.c:Osmundaceae_dna**, select an **Exponential** distribution. By default, this should have a mean of 1.0; you can check this using the triangle on the left to see the extended options. Repeat this for **clockRate.c:Osmundaceae_morph**.
+
+We also have three parameters for our molecular site model: **freqParameter**, **gammaShape** and **kappa**. We will leave these at their default values.
+
+We can now move on to our FBD parameters. First, we will consider the origin time, which describes how old the root of our phylogeny should be.
+
+>Click the triangle to the left of **OriginFBD** to view the default prior.
+
+Here we can see that the default prior is a **uniform distribution** between 0 and infinity, with a starting value of 100. Practically, this means that the only constraint being placed on our phylogeny is that the root has to be older than the age of our oldest fossil tip - our **Tip Dates** tab tells us that the oldest starting tip age is 184 million years ago.
+
+It is important for us to choose a more meaningful prior here, to ensure that the timescale of our phylogeny fits our prior knowledge. For example, we can check the [Paleobiology Database](https://paleobiodb.org/#/), a large open-access database of fossil occurrences. A search for the family **Osmundaceae** tells us that the oldest fossils in the database are from the [Carboniferous](https://paleobiodb.org/classic/basicTaxonInfo?taxon_no=54780), which corresponds to an age of around 360 to 300 million years ago. This is substantially older than the oldest fossil in our phylogeny. It is also older than the root age inferred in the original paper by {% cite Grimm2015 --file Total-Evidence-Tutorial/master-refs.bib %}, which corresponds to the Permian-Triassic boundary, 250 million years ago. To permit all of these options but exclude more extreme values, we will change the limits on our **uniform distribution** to correspond to the start of the Carboniferous, and the middle of the Permian.
+
+>Change the **Upper** limit of the uniform distribution to **360**, and the **Lower** limit to **230**. Click the **initial = ** button to view the starting values, and change the **Value** to **250**, before clicking **Ok**.
+
+Finally, we also have the three priors on our diversification and turnover rates, and fossil sampling proportion. We expect our diversification rate to be small, and our sampling proportion to be even smaller, so we will change these to exponential priors, while leaving the turnover parameter with the default uniform prior.
+
+>In the drop-down box next to **diversificationRateFBD**, select an **Exponential** distribution. Check that this distribution has a **mean** of **1.0**.
+>
+>In the drop-down box next to **samplingProportionFBD**, select an **Exponential** distribution. Use the triangle on the left to open the extended options. Give the distribution a **mean** of **0.1**. Click the **initial = ** button to view the starting values, and change the **Value** to **0.1**, before clicking **Ok**.
 
 ### Adding tip age priors
 
+As well as the priors which are already described in the **Priors** tab, we also need to set priors on the tip ages of our extinct OTUs. This will allow the ages of these tips to be sampled over the course of the MCMC. To do this, we need to give the model our uncertainty range for the age of each fossil tip. If you have previously completed the **Divergence Time Estimation** tutorial, this will be familiar to you, but we will walk this through with _Todea tidwellii_ as an example, which we consider to be between 140 and 129 million years old.
+
+>Click the **+ Add Prior** button at the bottom of the **Priors** tab page. When asked about the type of prior, select the **Sampled Ancestors MRCA Prior**.
+>
+>In the **Taxon set label** box, enter **Todea_tidwellii**. In the left-hand box, find **Todea_tidwellii_135**, select it, and click the **>>** button to move it into the right-hand table. Click **Ok**.
+>
+>Using the drop-down box next to the newly-created prior, select a **Uniform** distribution. Click the left-hand triangle to view the additional options. Set the **Lower** value to **129** and the **Upper** value to **140**. Check the box at the bottom for **Tipsonly**.
+
+Using this process, you can now enter the tip priors for each of the extinct tips, using the age uncertainties given in the box below.
 
 | Fossil tip | Age uncertainty |
 | --- | --- |
@@ -197,6 +250,7 @@ Now it's time to set up our priors.
 | _Osmunda plumites_ | 153--165 |
 ---
 
+>Create a tip age prior for each extinct tip.
 
 ### Setting up MCMC
 
