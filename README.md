@@ -254,13 +254,31 @@ The last step is to set up our MCMC options.
 
 >Select the **MCMC** tab.
 
-Here we can alter some things.
+The only setting we will change here is the chain length.
 
->Leave all settings at their default values and save the file as `Osmundaceae.xml`.
+>Increase the chain length to **30000000** iterations.
+>
+>Leave all other settings at their default values and save the file as `Osmundaceae.xml`.
 
-We are now ready to run our analysis.
+In one final step before we close BEAUti, we will also run an analysis which **samples from the prior**, to allow easier comparison between the shape of our priors and posteriors.
+
+>Check the box to **Sample from prior**.
+>
+>Leave all other settings at their default values and save the file as `Osmundaceae_sfp.xml`.
+
+We are now ready to run our analyses.
 
 >Open BEAST2 and select `Osmundaceae.xml`. Hit **Run** to start the analysis.
+>
+>Once this is complete, reopen BEAST2 and select `Osmundaceae_sfp.xml`. Hit **Run** to start the analysis.
+
+## Checking the logs and investigating the results
+		
+Once the BEAST2 analyses have finished running, it is good practice to check the logs, particularly to determine whether the analyses have **converged** and to verify that there is no abnormal behaviour in the traces. The easiest way to do this is to load your logs into **Tracer**.
+		
+>Open **Tracer** and load both `dinosaur_coal.log` and `dinosaur_BDSKY.log`.
+		
+Next to the file names, you can see the number of states in the logs (the length of the MCMC chain), and the burn-in which has been applied (the default is the first 10%). Beneath this is a list of the parameters which are stored in the log. You can select each one to examine the characteristics of that specific parameter. Alongside the parameter names are their `mean` and `ESS` values. `ESS` stands for **effective sample size**, and is a metric commonly used to determine whether a Bayesian analysis has converged. Values over 200 are typically taken to denote convergence; if any of the parameter values are below this, then the chain should be run for more iterations prior to analysis of the results. A quick glance at our two files shows that our coalescent analysis has already converged, but that our BDSKY analysis has not. You can (and should) also confirm this visually: select any parameter which has an ESS over 200, then click the `Trace` button at the top of the window, and you should see the characteristic "caterpillar" of a well-mixed chain, but select any parameter with an ESS below this value, and the trace will appear more undulating. In the interests of time, we will analyse our logs as they are, but ideally the BDSKY analysis should be run until convergence.
 
 ## Examining the results
 
