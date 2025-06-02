@@ -114,17 +114,13 @@ To put this knowledge into action, we now know that our dataset does not include
 
 >Select **Yes** to conditioning on variable characters.
 
-We can see that we now have three data partitions in the **Partitions** tab. Beneath our genetic data, our morphological dataset has been split into two. `Osmundaceae_morph2` contains 21 sites, and `Osmundaceae_morph3` contains 9 sites. Each partition has its own site model, and we will leave this setting to the default. We will discuss what this means when we set up the **Site model** tab.
+We can see that we now have three data partitions in the **Partitions** tab. Beneath our genetic data, our morphological dataset has been split into two. `Osmundaceae_morph2` contains 21 sites, and `Osmundaceae_morph3` contains 9 sites. You will notice that the sum of these two values is 30, higher than the 25 characters we saw in the raw morphological data: this is because five additional characters have been added to compensate for the ascertainment bias. Each partition has its own site model, and we will leave this setting to the default. We will discuss what this means when we set up the **Site model** tab.
 
 Next we will take a look at the clock models. For now, we can see that we have one clock for the DNA sequences, named `Osmundaceae_dna`, and a second which is used for both of the morphological partitions, named `Osmundaceae_morph`. This means that we consider all of our morphological data to have evolved under the same clock, with a unified rate. This seems a reasonable assumption, so we will leave this setting to the default.
 
 The following column defines the tree settings. We want to infer a single tree which is informed by both the genetic and morphological data, so we will link all three trees.
 
 >In the **Tree** column, click on the name **Osmundaceae_dna**. Type in **tree** and hit enter. Using the drop-down menus, change the tree to **tree** for both of the morphological partitions.
-
-Finally, the last column in the table is named **Ambiguities**. Thinking back to when we looked at the morphological data, we saw that some values were indeed ambiguous: the matrix contains brackets where two different possible states are defined. We will tell the model that the morphological data contains ambiguous states.
-
->Check the **Ambiguities** box for the two morphological partitions, **Osmundaceae_morph2** and **Osmundaceae_morph3**.
 
 We are now ready to move onto our tip date settings.
 
@@ -152,7 +148,7 @@ We will now set up the site models. These models describe the evolutionary proce
 
 We can see that our three partitions are listed in the table on the left, with the genetic data listed first. Here we will keep this model simple, but we recommend dipping into the other tutorials for more advice on how to set up site models for genetic sequence data.
 
->Check the **estimate** box for **Substitution rate**. Set the **Gamma Category Count** to **4**, leaving the settings for the shape of the gamma distribution to the defaults. Change the substitution model to **HKY**, leaving the initial **Kappa** value at **2.0** but **estimated**, as well as the **Frequencies**.
+>Set the **Gamma Category Count** to **4**, leaving the settings for the shape of the gamma distribution to the defaults. Change the substitution model to **HKY**, leaving the initial **Kappa** value at **2.0** but **estimated**, as well as the **Frequencies**.
 >
 >Select **Osmundaceae_morph2** in the left-hand table.
 
