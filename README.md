@@ -29,6 +29,10 @@ Both BEAST2 and BEAUti2 are Java programs, which means that the exact same code 
 
 We will need to edit the XML files produced by BEAUti, for which we'll need a text editor. It's best to use one designed for programmers as these include nice features such as syntax highlighting, which makes the code more reader-friendly. [Sublime Text](https://www.sublimetext.com) is a good option which is available for MacOS, Windows and Linux.
 
+###TreeAnnotator
+
+TreeAnnotator is used to summarise the posterior sample of trees to produce a maximum clade credibility tree and summarize the posterior estimates of other parameters that can be easily visualized on the tree (e.g. node height). This program is also useful for comparing a specific tree topology and branching times to the set of trees sampled in the MCMC analysis.
+
 ### Tracer
 
 [Tracer](http://beast.community/tracer) is used to summarise the posterior estimates of the various parameters sampled by the Markov Chain. This program can be used for visual inspection and to assess convergence. It helps to quickly view median estimates and 95% highest posterior density intervals of the parameters, and calculates the effective sample sizes (ESS) of parameters. It can also be used to investigate potential parameter correlations. We will be using Tracer v{{ page.tracerversion }}.
@@ -292,9 +296,43 @@ What about for our morphological data? If we select `clockRate.morph`, we see a 
 
 ## Checking the trees
 
+Next we will create a summary tree, to investigate the phylogenies we have inferred. We will do this using `TreeAnnotator`.
 
+>Open `TreeAnnotator`, from within the BEAST2.7.x folder.
+>
+>Keep the default summary settings (10% burn in, posterior probability limit of 0, **Maximum clade credibility tree**) except for the node heights, for which we will use **Median heights**.
+>
+>For the input tree file, use **Choose file...** to navigate to **Osmundaceae-tree.trees**. Change the name of the output file to **Osmundaceae-MCC.tree**.
+>
+>Click **Run**.
 
-```
+This process should be rapid. You may see a warning which flags that the trees contain **sampled ancestors**. This is an integral part of the fossilised birth-death model, whereby some fossils are placed directly onto the branches of later descendants. We will visualise this shortly.
+
+>Using a web browser, open [Icytree](https://icytree.org). Drag and drop **Osmundaceae-MCC.tree** into the browser screen.
+
+You should now be able to see your maximum clade credibility tree visualised. We can change some of the settings to better see the features of trees containing fossils.
+
+>Using the top menu, select **Style > Axis > Age** to add a time axis to the phylogeny.
+>
+>In the **Style** menu, uncheck the **Collapse zero-length edges** option. Now our sampled ancestors are visualised in the tree, on zero-length branches.
+
+A quick count shows us that in the MCC tree, four of our fossils are sampled ancestors. We can consider this in more detail by looking at the _Osmunda cinnamomea_ clade. Remember that our dataset was set up to include four tips pertaining to this species, three of which were fossils and one the living (genetic) sample. We might expect that our three fossils should be inferred as sampled ancestors of our living branch. How did our analysis do? We can see that our _Osmunda cinnamomea_ fossil from the Cretaceous of Canada is indeed retrieved as a sampled ancestor of the living species. However, the other two fossils, from the Neogene of the USA and Japan, cluster together in a neighbouring cherry. _Osmunda precinnamomea_ is retrieved as a sampled ancestor of these two fossils.
+
+Our MCC tree represents the single tree which contains the clades which are most supported within our MCMC chain. But it's important to look at uncertainty around this topology, to get a sense of how certain it really is. First we will look at uncertainty in the timescale of our tree.
+
+>Using the top menu, select **Style > Node height error bars > height_95%_HPD**.
+
+We can now see error bars attached to each node and tip, showing us the 95% highest posterior density for the age of that node or tip. Mousing over any branch also brings up a table which shows us the number attached to that bar.
+
+Another way to investigate uncertainty in the tree topology is to quantify the proportion of the posterior containing each subtree within the MCC tree.
+
+>Using the top menu, select **Style > Node height error bars > None** to remove these bars.
+>
+>Now select **Style > Internal node text > posterior**.
+
+We can see that these values vary drastically across the tree. For example, we can see that relationships within _Leptopteris_, and between _Leptopteris_ and the extant species of _Todea_, are very certain, with almost all being very close to 1. By contrast, those relationships we looked at earlier within _Osmunda cinnamomea_ are much less certain.
+
+It is commonplace within the phylogenetics literature to only present the MCC topology for which node support is at or above 50%. Nodes with support beneath this value are deemed too poorly supported to be reasonably interpreted, and so instead are generally collapsed into polytomies.
 
 ----
 
