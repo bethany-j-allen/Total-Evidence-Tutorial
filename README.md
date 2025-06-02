@@ -272,26 +272,28 @@ We are now ready to run our analyses.
 >
 >Once this is complete, reopen BEAST2 and select `Osmundaceae_sfp.xml`. Hit **Run** to start the analysis.
 
-## Checking the logs and investigating the results
+## Checking the logs
 		
-Once the BEAST2 analyses have finished running, it is good practice to check the logs, particularly to determine whether the analyses have **converged** and to verify that there is no abnormal behaviour in the traces. The easiest way to do this is to load your logs into **Tracer**.
+Once the BEAST2 analyses have finished running, we can take a cursory look at them using **Tracer**.
 		
->Open **Tracer** and load both `dinosaur_coal.log` and `dinosaur_BDSKY.log`.
+>Open **Tracer** and load both `Osmundaceae.log` and `Osmundaceae_sfp.log`.
 		
-Next to the file names, you can see the number of states in the logs (the length of the MCMC chain), and the burn-in which has been applied (the default is the first 10%). Beneath this is a list of the parameters which are stored in the log. You can select each one to examine the characteristics of that specific parameter. Alongside the parameter names are their `mean` and `ESS` values. `ESS` stands for **effective sample size**, and is a metric commonly used to determine whether a Bayesian analysis has converged. Values over 200 are typically taken to denote convergence; if any of the parameter values are below this, then the chain should be run for more iterations prior to analysis of the results. A quick glance at our two files shows that our coalescent analysis has already converged, but that our BDSKY analysis has not. You can (and should) also confirm this visually: select any parameter which has an ESS over 200, then click the `Trace` button at the top of the window, and you should see the characteristic "caterpillar" of a well-mixed chain, but select any parameter with an ESS below this value, and the trace will appear more undulating. In the interests of time, we will analyse our logs as they are, but ideally the BDSKY analysis should be run until convergence.
+First, we will check whether our empirical chain has converged. Once you have selected `Osmundaceae.log` in the top-left table, you will see alongside each of the parameter names are their `mean` and `ESS` values. `ESS` stands for **effective sample size**, and is a metric commonly used to determine whether a Bayesian analysis has converged. Values over 200 are typically taken to denote convergence; if any of the parameter values are below this, then the chain should be run for more iterations prior to analysis of the results.
 
-## Examining the results
+It is likely that given our chain length, some but not all of the parameters will have converged. You can (and should) also confirm this visually: select any parameter which has an ESS over 200, then click the `Trace` button at the top of the window, and you should see the characteristic "caterpillar" of a well-mixed chain, but select any parameter with an ESS below this value, and the trace will appear more undulating. For scientific study we should ensure complete convergence of all parameters, but for our purposes here we will examine the results as if they were converged.
 
-We can now examine the results of our **fossilised-birth-death** model. Again, we need to read in the relevant log file and trim off the first 10% as burn-in.
+To investigate the differences between our prior and posterior distributions, we will compare the empirical chain to the one which we sampled from the prior.
 
-```R
-# Navigate to Session > Set Working Directory > Choose Directory (on RStudio)
-# or change file name to the full path to the log file
-#(Use "dinosaur_BDSKY_final.log" if you used our pre-cooked XML)
-fbd_file <- "dinosaur_BDSKY.log"
+>Select both `Osmundaceae.log` and `Osmundaceae_sfp.log` in the top-left table, and toggle to the **Marginal Density** tab on the right to view the distributions from both chains on the same plot. The **Legend** drop-down at the bottom can be used to add a legend, indicating which distribution is from which chain.
 
-#Read in coalescent log and trim 10% burn-in
-fbd <- read.table(fbd_file, header = T) %>% slice_tail(prop = 0.9)
+Exploring the different parameters, we can see that for some, the prior and posterior are highly similar. For example, this is the case for most of the fossil tip heights given at the bottom of the table. This means that our prior is highly influential on the values we see in the posterior. However, for some other parameters, this is not the case, such as for parameters linked to the molecular data (e.g. `gammaShape`, `kappa`, `freqParameter`). This means that the shape of the posterior is being driven by the data rather than just the prior.
+
+What about for our morphological data? If we select `clockRate.morph`, we see a blank graph. At first this seems highly concerning, but actually we can work out why: if we select the two logs individually, we see that the prior distribution ranges between 0 and around 7, while the posterior distribution consists a highly concentrated spike at a value of around 0.001. Tracer is simply failing to plot these two very different distributions on the same set of axes - which might be unhelpful for now, but does tell us that our posterior distribution for this parameter is being heavily influenced by the data.
+
+## Checking the trees
+
+
+
 ```
 
 ----
