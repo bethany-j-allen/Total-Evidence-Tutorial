@@ -334,6 +334,54 @@ We can see that these values vary drastically across the tree. For example, we c
 
 It is commonplace within the phylogenetics literature to only present the MCC topology for which node support is at or above 50%. Nodes with support beneath this value are deemed too poorly supported to be reasonably interpreted, and so instead are generally collapsed into polytomies.
 
+# Advanced topic: ordered characters
+
+As mentioned in the **Site model** section of the tutorial, the Mk Lewis model assumes that transitions between all character states are equally likely for a given character. However, some characters are **ordered**, meaning that a lineage cannot directly transition from state **0** to state **2**, but needs to go through state **1** first. This can happen when a character is discretized from a continuous trait, for instance body size: in this situation it is very unlikely that a lineage can go from the "small" category to the "large" category without going first through the "medium" category.
+
+So can we account for ordered characters in our analysis? This cannot be done through BEAUti, but will require manually editing the XML file. Note that manually edited XML files can generally not be loaded again into BEAUti. When specifying such an analysis, it is thus a good idea to specify as much of the analysis as possible in BEAUti, and leave the manual changes for last.
+
+The first step is to specify which characters should be considered as ordered. If all characters with the same number of states (for instance all ternary characters) are ordered, then we can use the default partition created by BEAUti, otherwise we will need to specify our own partition which contains only the ordered characters.
+
+The second step is to define a rate matrix for our ordered characters, which will have a value of **1.0** for **possible** transitions, and **0.0** for **impossible** transitions. Note that this matrix will also depend on the number of states for the character, but we show here an example for a character with 3 states.
+
+{`% eq \left( \begin{array}{ccc}
+      -1.0 & 1.0 & 0.0 \\
+      1.0 & -2.0 & 1.0 \\
+       0.0 & 1.0 & -1.0
+    \end{array} \right) %`}
+
+We then need to convert this matrix into a BEAST2 object, by simply listing all elements in order (by row, left to right). Note that the diagonal elements are fully defined by the rest of the matrix (since all rows must equal to 0) and so do not need to be written. This results in the following XML code, which can be placed after the alignment (between the `</data>` and `<run>` elements):
+```xml
+<parameter id="3ordered_ratematrix" dimension="6" name="rates">1.0 0.0 1.0 1.0 0.0 1.0 </parameter>
+```
+
+The last step is to specify which likelihood calculation should use our ordered transition matrix. For this, we should first find the likelihood associated with our ordered partition. If we are using the default partition, it should look like this (where "penguins" is the name of the alignment and "3" the number of states for ordered characters):
+```xml
+<distribution branchRateModel="@RelaxedClockModel.c:penguins" id="morphTreeLikelihood.penguins4" spec="TreeLikelihood" useAmbiguities="true" tree="@tree">
+    <data id="penguins3" spec="FilteredAlignment" ascertained="true" data="@penguins" excludefrom="50" excludeto="53"
+        filter="5,8,12,15,31-32,34,44,56,58,71-74,76,83,88,96-97,104,109,117-118,120,122,126-127,137,140,143,151,156,158,160,167,169,171,186,194,199-200,206,209-210,214,218,222,227,235,238,246-248">
+        <userDataType id="morphDataType.penguins3" spec="beast.base.evolution.datatype.StandardData" ambiguities="01 12 45" nrOfStates="3"/>
+    </data>
+    <siteModel gammaCategoryCount="4" id="morphSiteModel.s:penguins3" shape="@gammaShape.s:penguins" spec="SiteModel">
+        <parameter estimate="false" id="mutationRate.s:penguins3" name="mutationRate">1.0</parameter>
+        <parameter estimate="false" id="proportionInvariant.s:penguins3" lower="0.0" name="proportionInvariant" upper="1.0">0.0</parameter>
+        <substModel datatype="@morphDataType.penguins3" id="LewisMK.s:penguins3" spec="morphmodels.evolution.substitutionmodel.LewisMK"/>
+    </siteModel>
+</distribution>
+```
+
+We then need to replace the default Mk Lewis substitution model by one using the transition matrix we just defined, i.e. replace this element:
+```xml
+        <substModel datatype="@morphDataType.penguins3" id="LewisMK.s:penguins3" spec="morphmodels.evolution.substitutionmodel.LewisMK"/>
+```
+with this one:
+```xml
+        <substModel id="morph3.substmodel" spec="GeneralSubstitutionModel" rates="@3ordered_ratematrix">
+            <frequencies id="morph3_freqs" frequencies="0.333 0.333 0.334" spec="Frequencies"/>
+        </substModel>
+```
+Note that we need to specify the frequencies for all states as well. Here we have chosen to leave them all equal (just as in the Mk Lewis model).
+
 ----
 
 # Useful Links
