@@ -334,6 +334,18 @@ We can see that these values vary drastically across the tree. For example, we c
 
 It is commonplace within the phylogenetics literature to only present the MCC topology for which node support is at or above 50%. Nodes with support beneath this value are deemed too poorly supported to be reasonably interpreted, and so instead are generally collapsed into polytomies.
 
+# Advanced topic: specifying the number of states
+
+As mentioned in the **Site model** section of the tutorial, BEAUti can automatically estimate the number of states from the alignment. Note that this is based on the number of different states present in the alignment and not on numerical values: for instance, if a character has states 0, 1 and 3, this character will be counted as having **3** states, not 4.
+
+However, it is also possible to provide the number of possible states for each character in the alignment file by writing a **CHARSTATELABELS** block. This block needs to contain a description for each character (one character per line), and is of the form
+```
+X LABEL / STATES,
+```
+where X is the index of the character, LABEL is the character description, and STATES is a list of all possible states, separated by spaces. The number of states for each character is then calculated by BEAUti based on the provided STATES list.
+
+An example Nexus file with character descriptions is provided in `Penguins_charstatelabels.nex`.
+
 # Advanced topic: ordered characters
 
 As mentioned in the **Site model** section of the tutorial, the Mk Lewis model assumes that transitions between all character states are equally likely for a given character. However, some characters are **ordered**, meaning that a lineage cannot directly transition from state **0** to state **2**, but needs to go through state **1** first. This can happen when a character is discretized from a continuous trait, for instance body size: in this situation it is very unlikely that a lineage can go from the "small" category to the "large" category without going first through the "medium" category.
@@ -381,6 +393,8 @@ with this one:
         </substModel>
 ```
 Note that we need to specify the frequencies for all states as well. Here we have chosen to leave them all equal (just as in the Mk Lewis model).
+
+An example XML file with ordered characters is shown in `Penguins_ordered.xml`.
 
 ----
 
