@@ -252,6 +252,8 @@ Using this process, you can now enter the tip priors for each of the extinct tip
 
 >Create a tip age prior for each extinct tip.
 
+Note that this is a time-consuming process, especially for large phylogenies. In order to automate this process, we provide the R script `scripts/add_age_uncertainty.R`, which can automatically add age uncertainty to a BEAST2 XML file. To use this script, first set up an XML file with your complete analysis setup, containing all the elements except for the tip age priors. Then create an R table similar to the one shown above, containing a column `taxa` with the name of each fossil and columns `min_age` and `max_age` for the lower and upper bounds of each age interval. You can then run the script to produce an XML file with the age uncertainty.
+
 ### Setting up MCMC
 
 The last step is to set up our MCMC options.
