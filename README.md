@@ -1,5 +1,5 @@
 ---
-author: Bethany J. Allen
+author: Bethany J. Allen,Joëlle Barido-Sottani
 level: Intermediate
 title: Total Evidence Tutorial
 subtitle: Inferring phylogenies using genetic sequences and morphological characters
