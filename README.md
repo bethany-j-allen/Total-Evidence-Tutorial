@@ -112,7 +112,7 @@ What does this mean? We will start by considering our DNA sequences. Here, our d
 
 Now let's translate this thinking to morphological data. What do these data represent? Each character describes a specific trait, with the values given to each tip denoting the state in which that character exists in that OTU. The meaning of our morphological characters and states are much less rigid than for our genetic data {% cite Goloboff2019 --file Total-Evidence-Tutorial/master-refs.bib %}. The most relevant manifestation of this point here is that it is much easier to describe and code characters which differ between our OTUs, in comparison with characteristics that are shared by all of them. This means that morphological datasets are typically biased towards morphological characters which vary, with many not containing **any** invariant characters. This is known as **ascertainment bias**. As we mentioned for the genetic data, invariant characters form an important part of the calculation of per-character rates of change, but these are not captured in our dataset. Because of this, phylogenetic models have been adapted to correct for the non-sampling of invariant sites in morphological data. This is the 'variable', or **v**, part of the **MKv** model of morphological character evolution {% cite Lewis2001 --file Total-Evidence-Tutorial/master-refs.bib %}; we will discuss what **Mk** means later.
 
-The original Osmundaceae dataset used by {% cite Grimm2015 --file Total-Evidence-Tutorial/master-refs.bib %} actually contained 33 morphological characters, with eight of these being **invariant**. However, because of the rarity of having this information in datasets, BEAST2 currently will not accept morphological data containing invariant sites; if you attempt to read a morphological dataset containing invariant sites into BEAUti, you will get an error stating that this is not possible. For the purposes of this tutorial, we removed these invariant characters from the dataset for you, but this is something you may need to conduct yourself if attempting to read a dataset into BEAUti which was not originally set up for BEAST2.
+The original Osmundaceae dataset used by {% cite Grimm2015 --file Total-Evidence-Tutorial/master-refs.bib %} actually contained 33 morphological characters, with eight of these being **invariant**. However, BEAST2 currently will not accept morphological data containing invariant sites unless character descriptions are provided; if you attempt to read a morphological dataset containing invariant sites into BEAUti, you will get an error stating that this is not possible. For the purposes of this tutorial, we removed these invariant characters from the dataset for you. In your own dataset, you will need to either remove the invariant characters or provide character descriptions (see section **Advanced topics** for more information on how to do that).
 
 To put this knowledge into action, we now know that our dataset does not include invariant sites, and so we would like to use the **Mkv** model to correct for ascertainment bias.
 
@@ -166,7 +166,7 @@ Now we can return to our earlier question: why was the morphological data split 
 
 We now need to check our morphological site model parameters. When we read in the dataset, we already told the model that there are no invariant sites, so we can leave the **Proportion invariant** blank.
 
-We also need to choose a value for the **Gamma Category Count**. This value determines how many transition rate categories we have, allowing for differences in transition rates between different morphological characters in the matrix. We just set this value to 4 for our molecular data. But as we mentioned before, the nature of morphological data means that we have much more variation in what different morphological characters actually describe than between different sites in a genetic sequence; this might lead us to think that we should allow for more different rate categories for our morphological data. However, we also have a much smaller total number of characters, giving us much less statistical power to actually infer these rate values compared to genetic data. Further, using models that condition on only sampling variable sites but also permit for among-character variation in evolutionary rates can be problematic {% cite Capobianco2025 --file Total-Evidence-Tutorial/master-refs.bib %}. To keep our analysis simple and aim to avoid identifiability issues, we will leave the Gamma Category Count values for the morphological data at 0. This means we will calculate a single transition rate for each of the morphological partitions.
+We also need to choose a value for the **Gamma Category Count**. This value determines how many transition rate categories we have, allowing for differences in transition rates between different morphological characters in the matrix. BEAST2 uses the recommended implementation for using models that condition on only sampling variable sites but also permit for among-character variation in evolutionary rates, so we can use gamma categories in combination with the Mk model {% cite Capobianco2025 --file Total-Evidence-Tutorial/master-refs.bib %}. We just set this value to 4 for our molecular data. But as we mentioned before, the nature of morphological data means that we have much more variation in what different morphological characters actually describe than between different sites in a genetic sequence; this might lead us to think that we should allow for more different rate categories for our morphological data. However, we also have a much smaller total number of characters, giving us much less statistical power to actually infer these rate values compared to genetic data. To keep our analysis simple, we will leave the Gamma Category Count values for the morphological data at 0. This means we will calculate a single transition rate for each of the morphological partitions.
 
 ### Clock models
 
@@ -252,6 +252,8 @@ Using this process, you can now enter the tip priors for each of the extinct tip
 
 >Create a tip age prior for each extinct tip.
 
+Note that this is a time-consuming process, especially for large phylogenies. In order to automate this process, we provide the R script `scripts/add_age_uncertainty.R`, which can automatically add age uncertainty to a BEAST2 XML file. To use this script, first set up an XML file with your complete analysis setup, containing all the elements except for the tip age priors. Then create an R table similar to the one shown above, containing a column `taxa` with the name of each fossil and columns `min_age` and `max_age` for the lower and upper bounds of each age interval. You can then run the script to produce an XML file with the age uncertainty.
+
 ### Setting up MCMC
 
 The last step is to set up our MCMC options.
@@ -333,6 +335,70 @@ Another way to investigate uncertainty in the tree topology is to quantify the p
 We can see that these values vary drastically across the tree. For example, we can see that relationships within _Leptopteris_, and between _Leptopteris_ and the extant species of _Todea_, are very certain, with almost all being very close to 1. By contrast, those relationships we looked at earlier within _Osmunda cinnamomea_ are much less certain.
 
 It is commonplace within the phylogenetics literature to only present the MCC topology for which node support is at or above 50%. Nodes with support beneath this value are deemed too poorly supported to be reasonably interpreted, and so instead are generally collapsed into polytomies.
+
+# Advanced topic: specifying the number of states
+
+As mentioned in the **Site model** section of the tutorial, BEAUti can automatically estimate the number of states from the alignment. Note that this is based on the number of different states present in the alignment and not on numerical values: for instance, if a character has states 0, 1 and 3, this character will be counted as having **3** states, not 4.
+
+However, it is also possible to provide the number of possible states for each character in the alignment file by writing a **CHARSTATELABELS** block. This block needs to contain a description for each character (one character per line), and is of the form
+```
+X LABEL / STATES,
+```
+where X is the index of the character, LABEL is the character description, and STATES is a list of all possible states, separated by spaces. The number of states for each character is then calculated by BEAUti based on the provided STATES list.
+
+As mentioned earlier, by default BEAUti does not allow invariant characters in morphological character matrices, because there is no way for the software to automatically calculate how many states an invariant character is supposed to have, and so it cannot specify a transition matrix for these characters. However, invariant characters can be included into the alignment if the number of possible states for these characters is specified. 
+
+An example Nexus file with character descriptions (including some invariant characters) is provided in `Penguins_charstatelabels.nex`.
+
+# Advanced topic: ordered characters
+
+As mentioned in the **Site model** section of the tutorial, the Mk Lewis model assumes that transitions between all character states are equally likely for a given character. However, some characters are **ordered**, meaning that a lineage cannot directly transition from state **0** to state **2**, but needs to go through state **1** first. This can happen when a character is discretized from a continuous trait, for instance body size: in this situation it is very unlikely that a lineage can go from the "small" category to the "large" category without going first through the "medium" category.
+
+So can we account for ordered characters in our analysis? This cannot be done through BEAUti, but will require manually editing the XML file. Note that manually edited XML files can generally not be loaded again into BEAUti. When specifying such an analysis, it is thus a good idea to specify as much of the analysis as possible in BEAUti, and leave the manual changes for last.
+
+The first step is to specify which characters should be considered as ordered. If all characters with the same number of states (for instance all ternary characters) are ordered, then we can use the default partition created by BEAUti, otherwise we will need to specify our own partition which contains only the ordered characters.
+
+The second step is to define a rate matrix for our ordered characters, which will have a value of **1.0** for **possible** transitions, and **0.0** for **impossible** transitions. Note that this matrix will also depend on the number of states for the character, but we show here an example for a character with 3 states.
+
+{`% eq \left( \begin{array}{ccc}
+      -1.0 & 1.0 & 0.0 \\
+      1.0 & -2.0 & 1.0 \\
+       0.0 & 1.0 & -1.0
+    \end{array} \right) %`}
+
+We then need to convert this matrix into a BEAST2 object, by simply listing all elements in order (by row, left to right). Note that the diagonal elements are fully defined by the rest of the matrix (since all rows must equal to 0) and so do not need to be written. This results in the following XML code, which can be placed after the alignment (between the `</data>` and `<run>` elements):
+```xml
+<parameter id="3ordered_ratematrix" dimension="6" name="rates">1.0 0.0 1.0 1.0 0.0 1.0 </parameter>
+```
+
+The last step is to specify which likelihood calculation should use our ordered transition matrix. For this, we should first find the likelihood associated with our ordered partition. If we are using the default partition, it should look like this (where "penguins" is the name of the alignment and "3" the number of states for ordered characters):
+```xml
+<distribution branchRateModel="@RelaxedClockModel.c:penguins" id="morphTreeLikelihood.penguins4" spec="TreeLikelihood" useAmbiguities="true" tree="@tree">
+    <data id="penguins3" spec="FilteredAlignment" ascertained="true" data="@penguins" excludefrom="50" excludeto="53"
+        filter="5,8,12,15,31-32,34,44,56,58,71-74,76,83,88,96-97,104,109,117-118,120,122,126-127,137,140,143,151,156,158,160,167,169,171,186,194,199-200,206,209-210,214,218,222,227,235,238,246-248">
+        <userDataType id="morphDataType.penguins3" spec="beast.base.evolution.datatype.StandardData" ambiguities="01 12 45" nrOfStates="3"/>
+    </data>
+    <siteModel gammaCategoryCount="4" id="morphSiteModel.s:penguins3" shape="@gammaShape.s:penguins" spec="SiteModel">
+        <parameter estimate="false" id="mutationRate.s:penguins3" name="mutationRate">1.0</parameter>
+        <parameter estimate="false" id="proportionInvariant.s:penguins3" lower="0.0" name="proportionInvariant" upper="1.0">0.0</parameter>
+        <substModel datatype="@morphDataType.penguins3" id="LewisMK.s:penguins3" spec="morphmodels.evolution.substitutionmodel.LewisMK"/>
+    </siteModel>
+</distribution>
+```
+
+We then need to replace the default Mk Lewis substitution model by one using the transition matrix we just defined, i.e. replace this element:
+```xml
+        <substModel datatype="@morphDataType.penguins3" id="LewisMK.s:penguins3" spec="morphmodels.evolution.substitutionmodel.LewisMK"/>
+```
+with this one:
+```xml
+        <substModel id="morph3.substmodel" spec="GeneralSubstitutionModel" rates="@3ordered_ratematrix">
+            <frequencies id="morph3_freqs" frequencies="0.333 0.333 0.334" spec="Frequencies"/>
+        </substModel>
+```
+Note that we need to specify the frequencies for all states as well. Here we have chosen to leave them all equal (just as in the Mk Lewis model).
+
+An example XML file with ordered characters is shown in `Penguins_ordered.xml`.
 
 ----
 
