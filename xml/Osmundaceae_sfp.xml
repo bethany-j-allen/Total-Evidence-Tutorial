@@ -99,7 +99,7 @@ dataType="standard">
 
     <map name="OneOnX" >beast.base.inference.distribution.OneOnX</map>
 
-    <run id="mcmc" spec="MCMC" chainLength="30000000">
+    <run id="mcmc" spec="MCMC" chainLength="30000000" sampleFromPrior="true">
         <state id="state" spec="State" storeEvery="5000">
             <tree id="Tree.t:tree" spec="beast.base.evolution.tree.Tree" name="stateNode">
                 <trait id="dateTrait.t:tree" spec="beast.base.evolution.tree.TraitSet" traitname="date-backward" value="Leptopteris_fraseri_0=0,Leptopteris_hymenophylloides_0=0,Leptopteris_wilkesiana_0=0,Leptopteris_superba_0=0,Todea_barbara_0=0,Todea_papuana_0=0,Todea_tidwellii_135=135,Osmunda_cinnamomea_0=0,Osmunda_cinnamomea_Neogene_USA_16=16,Osmunda_cinnamomea_Neogene_Japan_13=13,Osmunda_cinnamomea_Cretaceous_Canada_80=80,Osmunda_precinnamomea_60=60,Osmunda_claytoniana_0=0,Osmunda_chengii_150=150,Osmunda_banksiaefolia_0=0,Osmunda_bromeliaefolia_12=12,Osmunda_javanica_0=0,Osmunda_vachellii_0=0,Osmunda_arnoldii_60=60,Osmunda_dowkeri_58=58,Osmunda_japonica_0=0,Osmunda_lancea_0=0,Osmunda_regalis_0=0,Osmunda_ilianensis_5=5,Osmunda_nathorstii_0=0,Osmunda_oregonensis_36=36,Osmunda_pluma_60=60,Osmunda_shimokawaensis_13=13,Osmunda_wehrii_16=16,Osmunda_pulchella_184=184,Osmunda_liaoningensis_160=160,Osmunda_wangii_160=160,Osmunda_plumites_160=160">
@@ -190,7 +190,7 @@ dataType="standard">
                     <taxonset id="chengii" spec="TaxonSet">
                         <taxon id="Osmunda_chengii_150" spec="Taxon"/>
                     </taxonset>
-                    <Uniform id="Uniform.15" lower="160.0" name="distr" upper="145.0"/>
+                    <Uniform id="Uniform.15" lower="145.0" name="distr" upper="160.0"/>
                 </distribution>
                 <distribution id="cinnamomea_Canada.prior" spec="sa.math.distributions.SAMRCAPrior" tipsonly="true" tree="@Tree.t:tree">
                     <taxonset id="cinnamomea_Canada" spec="TaxonSet">
@@ -435,7 +435,7 @@ filter="1-2,5,7,11,24,26-28">
             <log idref="wangii.prior"/>
             <log idref="plumites.prior"/>
         </logger>
-        <logger id="screenlog" spec="Logger" logEvery="1000">
+        <logger id="screenlog" spec="Logger" logEvery="10000">
             <log idref="posterior"/>
             <log idref="likelihood"/>
             <log idref="prior"/>
