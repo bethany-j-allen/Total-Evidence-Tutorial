@@ -33,7 +33,7 @@ We will need to edit the XML files produced by BEAUti, for which we'll need a te
 
 [Tracer](http://beast.community/tracer) is used to summarise the posterior estimates of the various parameters sampled by the Markov Chain. This program can be used for visual inspection and to assess convergence. It helps to quickly view median estimates and 95% highest posterior density intervals of the parameters, and calculates the effective sample sizes (ESS) of parameters. It can also be used to investigate potential parameter correlations. We will be using Tracer v{{ page.tracerversion }}.
 
-###TreeAnnotator
+### TreeAnnotator
 
 TreeAnnotator is used to summarise the posterior sample of trees to produce a maximum clade credibility tree and summarize the posterior estimates of other parameters that can be easily visualized on the tree (e.g. node height). This program is also useful for comparing a specific tree topology and branching times to the set of trees sampled in the MCMC analysis.
 
@@ -50,7 +50,7 @@ In this tutorial we will infer a phylogeny for the Osmundaceae, or "Royal Fern",
 The aim of this tutorial is to:
 - Learn how to read morphological data into BEAST2;
 - Understand the differences between how BEAST2 treats morphological and genetic data;
-- Practise visualising total-evidence phylogenies.
+- Practice visualising total-evidence phylogenies.
 
 ## The data
 
@@ -64,7 +64,7 @@ We will now explore the nuances of our two data input files: these are _Osmundac
 
 First we will open the `nexus` file containing the genetic sequences in our text editor, to take a look at what the file contains. 
 
->Open `Osmundaceae_dna.nex` in your preferred text editor.
+> Open `Osmundaceae_dna.nex` in your preferred text editor.
 
 <figure>
 	<a id="fig:1"></a>
@@ -90,7 +90,7 @@ To complete the file, the phrase `end;` is used to denote the end of the `data` 
 
 We will now look at the `nexus` file containing the morphological data for comparison.
 
->Open `Osmundaceae_morph.nex` in your preferred text editor.
+> Open `Osmundaceae_morph.nex` in your preferred text editor.
 
 <figure>
 	<a id="fig:3"></a>
@@ -116,7 +116,8 @@ We will now start creating our BEAST2 model in BEAUti.
 
 First, we will load in our genetic data. This should be familiar to you if you have completed any of the other tutorials.
 
->Navigate to **File > Import Alignment**. Select `Osmundaceae_dna.nex` and select **Open**.
+> Navigate to **File > Import Alignment**. 
+> Select `Osmundaceae_dna.nex` and select **Open**.
 
 We can now see this dataset listed in our **Partitions** tab. We can see that the dataset contains 33 **Taxa** and 8628 **Sites**, and has the **Data Type** "nucleotide": this corresponds to the information we saw in the `nexus` header, so it seems the data have been read in correctly.
 
@@ -128,7 +129,8 @@ We can now see this dataset listed in our **Partitions** tab. We can see that th
 
 Next, we will read in our morphological data.
 
->Navigate to **File > Add Morphological Data**. Select `Osmundaceae_morph.nex` and select **Open**.
+> Navigate to **File > Add Morphological Data**. 
+> Select `Osmundaceae_morph.nex` and select **Open**.
 
 We now see a window asking whether we would like to "condition on recording variable characters only (Mkv)". This choice determines how the model treats the data with respect to **invariant sites**.
 
@@ -146,7 +148,7 @@ The original Osmundaceae dataset used by {% cite Grimm2015 --file Total-Evidence
 
 To put this knowledge into action, we now know that our dataset does not include invariant sites, and so we would like to use the **Mkv** model to correct for ascertainment bias.
 
->Select **Yes** to conditioning on variable characters.
+> Select **Yes** to conditioning on variable characters.
 
 We can see that we now have three data partitions in the **Partitions** tab. Beneath our genetic data, our morphological dataset has been split into two. `Osmundaceae_morph2` contains 21 sites, and `Osmundaceae_morph3` contains 9 sites. You will notice that the sum of these two values is 30, higher than the 25 characters we saw in the raw morphological data: this is because five additional characters have been added to compensate for the ascertainment bias. Each partition has its own site model, and we will leave this setting to the default. We will discuss what this means when we set up the **Site model** tab.
 
@@ -160,7 +162,9 @@ Next we will take a look at the clock models. For now, we can see that we have o
 
 The following column defines the tree settings. We want to infer a single tree which is informed by both the genetic and morphological data, so we will link all three trees.
 
->In the **Tree** column, click on the name **Osmundaceae_dna**. Type in **tree** and hit enter. Using the drop-down menus, change the tree to **tree** for both of the morphological partitions.
+> In the **Tree** column, click on the name **Osmundaceae_dna**. 
+> Type in **tree** and hit enter. 
+> Using the drop-down menus, change the tree to **tree** for both of the morphological partitions.
 
 <figure>
 	<a id="fig:7"></a>
@@ -174,7 +178,7 @@ We are now ready to move onto our tip date settings.
 
 We know that our dataset contains both living and extinct species, which means that we have tips which were sampled through time. As a result, we need to give the model this information.
 
->Select the **Tip Dates** tab, and check the box to **Use tip dates**.
+> Select the **Tip Dates** tab, and check the box to **Use tip dates**.
 
 We now see a table which lists the tip names, along with **Date** and **Age/Height** values. At present these latter two columns are currently all zero values. These values correspond to the **initial** ages these tips will have: for some they will be sampled and inferred over the course of the MCMC, but we will come back to this point later.
 
@@ -186,9 +190,13 @@ We now see a table which lists the tip names, along with **Date** and **Age/Heig
 
 While it is possible to enter these age values manually, it is easier to specify them within our `nexus` file, which is what we have done here. Each tip label ends with an underscore followed by a number, and this number is the age, in millions of years, which we would like for the initial age of that tip. We will read these into the table.
 
->Ensure that the switch at the top for **Dates specified** is set to **numerically as... year**. Change the second drop-down menu from **Since some time in the past** to **Before the present**. Then select **Auto-configure**.
+> Ensure that the switch at the top for **Dates specified** is set to **numerically as... year**. 
+> Change the second drop-down menu from **Since some time in the past** to **Before the present**. 
+> Then select **Auto-configure**.
 >
->Ensure that the switch is set to **use everything**. Change the drop-down to **after last**, and ensure that the text box contains a single underscore, `_`. Select **OK**.
+> Ensure that the switch is set to **use everything**. 
+> Change the drop-down to **after last**, and ensure that the text box contains a single underscore, `_`. 
+> Select **OK**.
 
 <figure>
 	<a id="fig:9"></a>
@@ -208,11 +216,13 @@ The **Date** and **Age/Height** values should now be repopulated using the numbe
 
 We will now set up the site models. These models describe the evolutionary processes which we think govern the changing of states in both our molecular and morphological datasets, so it is particularly important to understand the choices we are making in this tab when setting up a total-evidence analysis.
 
->Select the **Site Model** tab.
+> Select the **Site Model** tab.
 
 We can see that our three partitions are listed in the table on the left, with the genetic data listed first. Here we will keep this model simple, but we recommend dipping into the other tutorials for more advice on how to set up site models for genetic sequence data.
 
->Set the **Gamma Category Count** to **4**, leaving the settings for the shape of the gamma distribution to the defaults. Change the substitution model to **HKY**, leaving the initial **Kappa** value at **2.0** but **estimated**, as well as the **Frequencies**.
+> Set the **Gamma Category Count** to **4**, leaving the settings for the shape of the gamma distribution to the defaults. 
+> Change the substitution model to **HKY**, leaving the initial **Kappa** value at **2.0**.
+> Set the **Kappa** and the **Frequencies** parameters to **estimated**.
 
 <figure>
 	<a id="fig:11"></a>
@@ -220,7 +230,7 @@ We can see that our three partitions are listed in the table on the left, with t
 	<figcaption>Figure 11: The settings for the site model for the genetic sequence data.</figcaption>
 </figure>
 
->Select **Osmundaceae_morph2** in the left-hand table.
+> Select **Osmundaceae_morph2** in the left-hand table.
 
 We can now begin thinking about our model(s) of morphological evolution. We can see that the default **Subst Model** is the **Lewis Mk**. At present this is the only model of morphological evolution available in BEAST2. (If you check the drop-down for this box, there is also the option of a **Mutation Death Model**. This is a **Dollo model**, which handles exclusively binary character states. It is configured specifically for word matrices used in language evolution, so we will not discuss this model further here.)
 
@@ -232,7 +242,7 @@ We can now begin thinking about our model(s) of morphological evolution. We can 
 
 In brief, what is the Lewis Mk model? It is the **Markov _k_-states model described by {% cite Lewis2001 --file Total-Evidence-Tutorial/master-refs.bib %}. For those who are familiar with genetic substitution models, it is the morphological equivalent of the Jukes-Cantor 69 model. The model assumes that all character state transitions are just as likely as each other. For genetic sequences, this means that an A base is equally likely to transition to a G, C, or T.
 
-In morphological evolution, this means several important things. Our Lewis MK model assumes that the transition from 0 to 1 is just as likely as the transition from 1 to 0 {% cite Lewis2001 --file Total-Evidence-Tutorial/master-refs.bib %}. If a character represents whether a complex evolutionary feature is present or not, our transitions therefore represent acquisition and loss. We might think it is much harder to lose such a character than to gain it: that would be a violation of this model. Further, the model assumes that, for example, the transition from 0 to 1 is just as likely as the transition from 0 to 2. This means that we assume character states have been coded as independent entities, but if these states are actually ordered (0 must transition to 1, then 1 must transition to 2), this is also a violation of the model. Understanding how the morphological characters have been coded, and whether any violations exist between these thought processes and the way in which the site model operates, is therefore fundamental to determining how well the site model will perform, and potentially how accurate our inferred phylogeny is {% cite Goloboff2019 --file Total-Evidence-Tutorial/master-refs.bib %}{% cite Mulvey2025b --file Total-Evidence-Tutorial/master-refs.bib %}.
+In morphological evolution, this means several important things. Our Lewis MK model assumes that the transition from 0 to 1 is just as likely as the transition from 1 to 0 {% cite Lewis2001 --file Total-Evidence-Tutorial/master-refs.bib %}. If a character represents whether a complex evolutionary feature is present or not, our transitions therefore represent acquisition and loss. We might think it is much harder to lose such a character than to gain it: that would be a violation of this model. Further, the model assumes that, for example, the transition from 0 to 1 is just as likely as the transition from 0 to 2. This means that we assume character states have been coded as independent entities, but if these states are actually ordered (0 must transition to 1, then 1 must transition to 2), this is also a violation of the model. Understanding how the morphological characters have been coded, and whether any violations exist between these thought processes and the way in which the site model operates, is therefore fundamental to determining how well the site model will perform, and potentially how accurate our inferred phylogeny is {% cite Goloboff2019 Mulvey2025b --file Total-Evidence-Tutorial/master-refs.bib %}.
 
 Now we can return to our earlier question: why was the morphological data split into two partitions? Under the Lewis Mk model, we know that for each morphological character, our transition matrix is dependent on the number of states, _k_, which that character can take. As a result, `Osmundaceae_morph2` contains all characters with two possible states, and `Osmundaceae_morph3` contains all characters with three possible states. In order to determine these partitions, BEAST2 automatically uses the number of character states present in the dataset for each character. This means that if a character is only represented by 0 or 1 in the dataset, BEAST2 assumes that there is no "secret" state 2.
 
@@ -244,7 +254,7 @@ We also need to choose a value for the **Gamma Category Count**. This value dete
 
 The next tab describes our clock models.
 
->Select the **Clock model** tab.
+> Select the **Clock model** tab.
 
 In the left-hand table, we see our two clocks, one for the genetic data and one for the morphological data. Clicking between them, we can see that for both, the default settings are for a **Strict Clock** with a **Mean clock rate** starting at 1.0, but which is **estimated** during the MCMC. We are dealing with a small phylogeny and a small number of characters, particularly for our morphological data, which are unlikely to provide us with enough information to fit a more complex clock model. We will therefore retain these defaults and use strict clocks.
 
@@ -258,13 +268,13 @@ In the left-hand table, we see our two clocks, one for the genetic data and one 
 
 Now it's time to set up our priors.
 
->Select the **Priors** tab.
+> Select the **Priors** tab.
 
 Our first task is to choose our tree prior, which determines the type of evolutionary model we will use, and therefore the type of tree we will infer. We know that our phylogeny contains both extant and extinct tips, and because our datasets are small, we will keep things simple and assume constant evolutionary rates through time. This means that we need to use the **Fossilized Birth-Death Model**.
 
->In the drop-down box next to **Tree**, select **Fossilized Birth-Death Model**.
+> In the drop-down box next to **Tree**, select **Fossilized Birth-Death Model**.
 >
->Click the triangle next to **Tree** to view the additional tree prior options.
+> Click the triangle next to **Tree** to view the additional tree prior options.
 
 <figure>
 	<a id="fig:14"></a>
@@ -274,13 +284,14 @@ Our first task is to choose our tree prior, which determines the type of evoluti
 
 Here we see many different options for our model. We can see that the FBD model will be parameterised with a diversification rate, turnover rate, and fossil sampling proportion, each of which will be estimated. We also have a value for **rho**, the proportion of extant tips which are included within the dataset, which is currently fixed at 1.0 (complete extant sampling). At time of writing, [World Flora Online](https://wfoplantlist.org/taxon/wfo-7000000433-2024-12?page=1) considers there to be 28 accepted living species in Osmundaceae. Our dataset contains 15 species dated to the present day (check the number with an age of "0" in the **Tip Dates** tab): we will therefore set the rho value to 15/28 = 0.536.
 
->Set the **rho** value to **0.536**.
+> Set the **rho** value to **0.536**.
 
 We will leave the remaining tree parameter priors to their defaults.
 
 The next two priors describe the clock rate parameters for the molecular and morphological data. We expect these values to be fairly low, so we will change both to exponential priors with a mean of 1.0.
 
->In the drop-down box next to **clockRate.c:Osmundaceae_dna**, select an **Exponential** distribution. By default, this should have a mean of 1.0; you can check this using the triangle on the left to see the extended options. Repeat this for **clockRate.c:Osmundaceae_morph**.
+> In the drop-down box next to **clockRate.c:Osmundaceae_dna**, select an **Exponential** distribution. By default, this should have a mean of 1.0; you can check this using the triangle on the left to see the extended options. 
+> Repeat this for **clockRate.c:Osmundaceae_morph**.
 
 <figure>
 	<a id="fig:15"></a>
@@ -292,13 +303,14 @@ We also have three parameters for our molecular site model: **freqParameter**, *
 
 We can now move on to our FBD parameters. First, we will consider the origin time, which describes how old the root of our phylogeny should be.
 
->Click the triangle to the left of **OriginFBD** to view the default prior.
+> Click the triangle to the left of **OriginFBD** to view the default prior.
 
 Here we can see that the default prior is a **uniform distribution** between 0 and infinity, with a starting value of 100. Practically, this means that the only constraint being placed on our phylogeny is that the root has to be older than the age of our oldest fossil tip - our **Tip Dates** tab tells us that the oldest starting tip age is 184 million years ago.
 
 It is important for us to choose a more meaningful prior here, to ensure that the timescale of our phylogeny fits our prior knowledge. For example, we can check the [Paleobiology Database](https://paleobiodb.org/#/), a large open-access database of fossil occurrences. A search for the family **Osmundaceae** tells us that the oldest fossils in the database are from the [Carboniferous](https://paleobiodb.org/classic/basicTaxonInfo?taxon_no=54780), which corresponds to an age of around 360 to 300 million years ago. This is substantially older than the oldest fossil in our phylogeny. It is also older than the root age inferred in the original paper by {% cite Grimm2015 --file Total-Evidence-Tutorial/master-refs.bib %}, which corresponds to the Permian-Triassic boundary, 250 million years ago. To permit all of these options but exclude more extreme values, we will change the limits on our **uniform distribution** to correspond to the start of the Carboniferous, and the middle of the Triassic.
 
->Change the **Upper** limit of the uniform distribution to **360**, and the **Lower** limit to **230**. Click the **initial = ** button to view the starting values, and change the **Value** to **250**, before clicking **Ok**.
+> Change the **Upper** limit of the uniform distribution to **360**, and the **Lower** limit to **230**. 
+> Click the **initial =** button to view the starting values, and change the **Value** to **250**, then click **OK**.
 
 <figure>
 	<a id="fig:16"></a>
@@ -308,7 +320,8 @@ It is important for us to choose a more meaningful prior here, to ensure that th
 
 Finally, we also have the three priors on our diversification and turnover rates, and fossil sampling proportion. We expect our diversification rate to be small, and our sampling proportion to be even smaller, so we will change these to exponential priors, while leaving the turnover parameter with the default uniform prior.
 
->In the drop-down box next to **diversificationRateFBD**, select an **Exponential** distribution. Check that this distribution has a **mean** of **1.0**.
+> In the drop-down box next to **diversificationRateFBD**, select an **Exponential** distribution. 
+> Check that this distribution has a **mean** of **1.0**.
 
 <figure>
 	<a id="fig:17"></a>
@@ -316,7 +329,10 @@ Finally, we also have the three priors on our diversification and turnover rates
 	<figcaption>Figure 17: The settings for the prior distribution on the diversification rate.</figcaption>
 </figure>
 
->In the drop-down box next to **samplingProportionFBD**, select an **Exponential** distribution. Use the triangle on the left to open the extended options. Give the distribution a **mean** of **0.1**. Click the **initial = ** button to view the starting values, and change the **Value** to **0.1**, before clicking **Ok**.
+>In the drop-down box next to **samplingProportionFBD**, select an **Exponential** distribution. 
+> Use the triangle on the left to open the extended options. 
+> Give the distribution a **mean** of **0.1**. 
+> Click the **initial =** button to view the starting values, and change the **Value** to **0.1**, then click **Ok**.
 
 <figure>
 	<a id="fig:18"></a>
@@ -328,7 +344,8 @@ Finally, we also have the three priors on our diversification and turnover rates
 
 As well as the priors which are already described in the **Priors** tab, we also need to set priors on the tip ages of our extinct OTUs. This will allow the ages of these tips to be sampled over the course of the MCMC. To do this, we need to give the model our uncertainty range for the age of each fossil tip. If you have previously completed the **Divergence Time Estimation** tutorial, this will be familiar to you, but we will walk this through with _Todea tidwellii_ as an example, which we consider to be between 140 and 129 million years old.
 
->Click the **+ Add Prior** button at the bottom of the **Priors** tab page. When asked about the type of prior, select the **Sampled Ancestors MRCA Prior**.
+> Click the **+ Add Prior** button at the bottom of the **Priors** tab page. 
+> When asked about the type of prior, select the **Sampled Ancestors MRCA Prior**.
 
 <figure>
 	<a id="fig:19"></a>
@@ -336,7 +353,9 @@ As well as the priors which are already described in the **Priors** tab, we also
 	<figcaption>Figure 19: The window giving the option of adding a Sampled Ancestors MRCA Prior.</figcaption>
 </figure>
 
->In the **Taxon set label** box, enter **tidwellii**. In the left-hand box, find **Todea_tidwellii_135**, select it, and click the **>>** button to move it into the right-hand table. Click **Ok**.
+> In the **Taxon set label** box, enter **tidwellii**. 
+> In the left-hand box, find **Todea_tidwellii_135**, select it, and click the **>>** button to move it into the right-hand table. 
+> Click **Ok**.
 
 <figure>
 	<a id="fig:20"></a>
@@ -344,7 +363,10 @@ As well as the priors which are already described in the **Priors** tab, we also
 	<figcaption>Figure 20: The taxon set editor window for adding a tip prior for _Todea tidwellii_.</figcaption>
 </figure>
 
->Using the drop-down box next to the newly-created prior, select a **Uniform** distribution. Click the left-hand triangle to view the additional options. Set the **Lower** value to **129** and the **Upper** value to **140**. Check the box at the bottom for **Tipsonly**.
+>Using the drop-down box next to the newly-created prior, select a **Uniform** distribution. 
+> Click the left-hand triangle to view the additional options. 
+> Set the **Lower** value to **129** and the **Upper** value to **140**. 
+> Check the box at the bottom for **Tipsonly**.
 
 <figure>
 	<a id="fig:21"></a>
@@ -376,7 +398,7 @@ Using this process, you can now enter the tip priors for each of the extinct tip
 | _Osmunda plumites_ | 153--165 |
 ---
 
->Create a tip age prior for each extinct tip.
+> Create a tip age prior for each extinct tip.
 
 <figure>
 	<a id="fig:22"></a>
@@ -428,7 +450,9 @@ It is likely that given our chain length, some but not all of the parameters wil
 
 To investigate the differences between our prior and posterior distributions, we will compare the empirical chain to the one which we sampled from the prior.
 
->Select both `Osmundaceae.log` and `Osmundaceae_sfp.log` in the top-left table, and toggle to the **Marginal Density** tab on the right to view the distributions from both chains on the same plot. The **Legend** drop-down at the bottom can be used to add a legend, indicating which distribution is from which chain.
+>Select both `Osmundaceae.log` and `Osmundaceae_sfp.log` in the top-left table
+> Switch to the **Marginal Density** tab on the right to view the distributions from both chains on the same plot. 
+> The **Legend** drop-down at the bottom can be used to add a legend, indicating which distribution is from which chain.
 
 Exploring the different parameters, we can see that for some, the prior and posterior are highly similar. For example, this is the case for most of the fossil tip heights given at the bottom of the table. This means that our prior is highly influential on the values we see in the posterior. However, for some other parameters, this is not the case, such as for parameters linked to the molecular data (e.g. `gammaShape`, `kappa`, `freqParameter`). This means that the shape of the posterior is being driven by the data rather than just the prior.
 
@@ -498,11 +522,11 @@ The first step is to specify which characters should be considered as ordered. I
 
 The second step is to define a rate matrix for our ordered characters, which will have a value of **1.0** for **possible** transitions, and **0.0** for **impossible** transitions. Note that this matrix will also depend on the number of states for the character, but we show here an example for a character with 3 states.
 
-{`% eq \left( \begin{array}{ccc}
+{% eq \left( \begin{array}{ccc}
       -1.0 & 1.0 & 0.0 \\
       1.0 & -2.0 & 1.0 \\
        0.0 & 1.0 & -1.0
-    \end{array} \right) %`}
+    \end{array} \right) %}
 
 We then need to convert this matrix into a BEAST2 object, by simply listing all elements in order (by row, left to right). Note that the diagonal elements are fully defined by the rest of the matrix (since all rows must equal to 0) and so do not need to be written. This results in the following XML code, which can be placed after the alignment (between the `</data>` and `<run>` elements):
 ```xml
