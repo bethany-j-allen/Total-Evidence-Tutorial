@@ -136,7 +136,7 @@ We now see a window asking whether we would like to "condition on recording vari
 
 <figure>
 	<a id="fig:5"></a>
-	<img style="width:75%;" src="figures/variable_chars.png" alt="">
+	<img style="width:50%;" src="figures/variable_chars.png" alt="">
 	<figcaption>Figure 5: The window asking whether to condition on recording only variable characters.</figcaption>
 </figure>
 
@@ -349,7 +349,7 @@ As well as the priors which are already described in the **Priors** tab, we also
 
 <figure>
 	<a id="fig:19"></a>
-	<img style="width:75%;" src="figures/sa_mrca_prior.png" alt="">
+	<img style="width:50%;" src="figures/sa_mrca_prior.png" alt="">
 	<figcaption>Figure 19: The window giving the option of adding a Sampled Ancestors MRCA Prior.</figcaption>
 </figure>
 
@@ -448,6 +448,12 @@ First, we will check whether our empirical chain has converged. Once you have se
 
 It is likely that given our chain length, some but not all of the parameters will have converged. You can (and should) also confirm this visually: select any parameter which has an ESS over 200, then click the `Trace` button at the top of the window, and you should see the characteristic "caterpillar" of a well-mixed chain, but select any parameter with an ESS below this value, and the trace will appear more undulating. For scientific study we should ensure complete convergence of all parameters, but for our purposes here we will examine the results as if they were converged.
 
+<figure>
+	<a id="fig:24"></a>
+	<img style="width:75%;" src="figures/tracer_chain.png" alt="">
+	<figcaption>Figure 24: A well-mixed chain trace, here for the parameter **treeLength**.</figcaption>
+</figure>
+
 To investigate the differences between our prior and posterior distributions, we will compare the empirical chain to the one which we sampled from the prior.
 
 >Select both `Osmundaceae.log` and `Osmundaceae_sfp.log` in the top-left table
@@ -455,6 +461,12 @@ To investigate the differences between our prior and posterior distributions, we
 > The **Legend** drop-down at the bottom can be used to add a legend, indicating which distribution is from which chain.
 
 Exploring the different parameters, we can see that for some, the prior and posterior are highly similar. For example, this is the case for most of the fossil tip heights given at the bottom of the table. This means that our prior is highly influential on the values we see in the posterior. However, for some other parameters, this is not the case, such as for parameters linked to the molecular data (e.g. `gammaShape`, `kappa`, `freqParameter`). This means that the shape of the posterior is being driven by the data rather than just the prior.
+
+<figure>
+	<a id="fig:25"></a>
+	<img style="width:75%;" src="figures/gamma_shape.png" alt="">
+	<figcaption>Figure 25: Comparison of the sampled-from-prior and posterior gamma shape estimates.</figcaption>
+</figure>
 
 What about for our morphological data? If we select `clockRate.morph`, we see a blank graph. At first this seems highly concerning, but actually we can work out why: if we select the two logs individually, we see that the prior distribution ranges between 0 and around 7, while the posterior distribution consists a highly concentrated spike at a value of around 0.001. Tracer is simply failing to plot these two very different distributions on the same set of axes - which might be unhelpful for now, but does tell us that our posterior distribution for this parameter is being heavily influenced by the data.
 
@@ -480,19 +492,31 @@ You should now be able to see your maximum clade credibility tree visualised. We
 >
 >In the **Style** menu, uncheck the **Collapse zero-length edges** option. Now our sampled ancestors are visualised in the tree, on zero-length branches.
 
-A quick count shows us that in the MCC tree, four of our fossils are sampled ancestors. We can consider this in more detail by looking at the _Osmunda cinnamomea_ clade. Remember that our dataset was set up to include four tips pertaining to this species, three of which were fossils and one the living (genetic) sample. We might expect that our three fossils should be inferred as sampled ancestors of our living branch. How did our analysis do? We can see that our _Osmunda cinnamomea_ fossil from the Cretaceous of Canada is indeed retrieved as a sampled ancestor of the living species. However, the other two fossils, from the Neogene of the USA and Japan, cluster together in a neighbouring cherry. _Osmunda precinnamomea_ is retrieved as a sampled ancestor of these two fossils.
+<figure>
+	<a id="fig:26"></a>
+	<img style="width:75%;" src="figures/MCC_tree.png" alt="">
+	<figcaption>Figure 26: The visualised MCC tree.</figcaption>
+</figure>
+
+A quick count shows us that in our MCC tree, five of our fossils are sampled ancestors. We can consider this in more detail by looking at the _Osmunda cinnamomea_ clade. Remember that our dataset was set up to include four tips pertaining to this species, three of which were fossils and one the living (genetic) sample. We might expect that our three fossils should be inferred as sampled ancestors of our living branch. How did our analysis do? We can see that our _Osmunda cinnamomea_ fossil from the Cretaceous of Canada is indeed retrieved as a sampled ancestor of the living species. However, the other two fossils, from the Neogene of the USA and Japan, cluster together in a neighbouring cherry. _Osmunda precinnamomea_ branches off between our Cretaceous fossil and the rest of the species.
 
 Our MCC tree represents the single tree which contains the clades which are most supported within our MCMC chain. But it's important to look at uncertainty around this topology, to get a sense of how certain it really is. First we will look at uncertainty in the timescale of our tree.
 
 >Using the top menu, select **Style > Node height error bars > height_95%_HPD**.
 
-We can now see error bars attached to each node and tip, showing us the 95% highest posterior density for the age of that node or tip. Mousing over any branch also brings up a table which shows us the number attached to that bar.
+We can now see error bars attached to each node and tip, showing us the 95% highest posterior density for the age of that node or tip. Mousing over any branch also brings up a table which shows us the numbers attached to that bar.
 
 Another way to investigate uncertainty in the tree topology is to quantify the proportion of the posterior containing each subtree within the MCC tree.
 
 >Using the top menu, select **Style > Node height error bars > None** to remove these bars.
 >
 >Now select **Style > Internal node text > posterior**.
+
+<figure>
+	<a id="fig:27"></a>
+	<img style="width:75%;" src="figures/MCC_tree_uncertainty.png" alt="">
+	<figcaption>Figure 27: The MCC tree annotated with the proportion of the posterior containing each subtree.</figcaption>
+</figure>
 
 We can see that these values vary drastically across the tree. For example, we can see that relationships within _Leptopteris_, and between _Leptopteris_ and the extant species of _Todea_, are very certain, with almost all being very close to 1. By contrast, those relationships we looked at earlier within _Osmunda cinnamomea_ are much less certain.
 
