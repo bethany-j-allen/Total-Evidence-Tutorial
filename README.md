@@ -396,6 +396,8 @@ Using this process, you can now enter the tip priors for each of the extinct tip
 | _Osmunda liaoningensis_ | 153--165 |
 | _Osmunda wangii_ | 153--165 |
 | _Osmunda plumites_ | 153--165 |
+|---|---|
+
 ---
 
 > Create a tip age prior for each extinct tip.
