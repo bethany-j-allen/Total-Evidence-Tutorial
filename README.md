@@ -108,9 +108,20 @@ Here we have highlighted a handful of ways in which morphological data must be c
 
 We will now start creating our BEAST2 model in BEAUti.
 
+### Install BEAST2 packages
+
+First, we have to install the BEAST 2 packages that are needed for this analysis. The packages that we will use are called **MM** (Morph-Models) and **SA** (Sampled Ancestors).
+
+>Open the **Package Manager** by navigating to **File > Manage Packages** in the menu. Install the **MM** package by selecting it and clicking the **Install/Upgrade** button. Do the same for the **SA** package. Close the BEAST2 Package Manager and **restart BEAUti** to fully load the packages.
+<figure>
+ <a id="fig:2"></a>
+ <img src="figures/beast2_package_manager.png" alt="">
+ <figcaption>Figure 2: The BEAST2 Package Manager.</figcaption>
+</figure>
+
 ### Importing the data
 
-First, we will load in our genetic data. This should be familiar to you if you have completed any of the other tutorials.
+Next, we will load in our genetic data. This should be familiar to you if you have completed any of the other tutorials.
 
 > Navigate to **File > Import Alignment**. 
 > Select `Osmundaceae_dna.nex` and select **Open**.
