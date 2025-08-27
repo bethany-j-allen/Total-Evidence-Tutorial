@@ -100,7 +100,7 @@ This time, the data format is described as "standard" rather than "dna". When us
 
 Beneath this, again, we see the name of each OTU followed by its character states for each trait. This time, no tip has only question marks, so we have at least some morphological data for every tip. But overall, there are still a high number of question marks spread across the dataset, with unknown states making up a larger proportion of the data compared to the DNA. For example, we can see that for `Todea_papuana_0`, only five of the characters are coded, with all other states unknown.
 
-Another thing to note is that not all of our morphological "sequences" are the same length. This is because some contain bracketed pairs of values. For example, we see that `Osmunda_cinnamomea_0` contains two, the first being `{1 2}`, and the second being `{0 1}`. Here, we are denoting *ambiguity*. For these particular characters, we are telling the model that the value could be either of these two states. It is important to note that the model will interpret this information to mean that the state could be *either one* of these values, *not both*. If the morphological character in question was not coded with this information in mind, you risk violating BEAST2's model of morphological evolution.
+Another thing to note is that not all of our morphological "sequences" are the same length. This is because some contain bracketed pairs of values. For example, we see that `Osmunda_cinnamomea_0` contains two, the first being `{12}`, and the second being `{01}`. Here, we are denoting *ambiguity*. For these particular characters, we are telling the model that the value could be either of these two states. It is important to note that the model will interpret this information to mean that the state could be *either one* of these values, *not both*. If the morphological character in question was not coded with this information in mind, you risk violating BEAST2's model of morphological evolution.
 
 Here we have highlighted a handful of ways in which morphological data must be carefully formatted to be compatible with BEAST2. Different phylogenetic inference software use different models for morphological character evolution, and it is important to bear in mind the relationship between the morphological dataset design and the assumptions made by the model in your software of choice.
 
@@ -381,7 +381,7 @@ As well as the priors which are already described in the **Priors** tab, we also
 	<figcaption>Figure 21: The settings for the tip prior on _Todea tidwellii_.</figcaption>
 </figure>
 
-Using this process, you can now enter the tip priors for each of the extinct tips, using the age uncertainties given in the box below. We have included the tips which have a set age for the sake of completeness, but it is not necessary to add a prior for these tips, as their initial ages are set to this date and if no prior is added, they will remain fixed at this age throughout the MCMC.
+Using this process, you can now enter the tip priors for each of the extinct tips, using the age uncertainties given in the box below. We have included the tips which have a set age (single point estimate, _Osmunda cinnamomea_ for instance)  for the sake of completeness, but it is not necessary to add a prior for these tips. Their initial ages are set to this date and if no prior is added, they will remain fixed at this age throughout the MCMC.
 
 | Fossil tip | Age uncertainty |
 | --- | --- |
