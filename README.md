@@ -1,10 +1,23 @@
 ---
 author: Bethany J. Allen,Joëlle Barido-Sottani
-level: Intermediate
 title: Total Evidence Tutorial
 subtitle: Inferring phylogenies using genetic sequences and morphological characters
-beastversion: 2.7.7
 tracerversion: 1.7.x
+beastversion_tutorial: 2.7.7
+workflow: Advanced analysis
+status: current
+keywords:
+- fossilized birth-death
+- morphological
+- tip dating
+- calibration
+packages:
+- MM
+- SA
+domains:
+- macroevolution
+- palaeontology
+beastversion_package: '2.7'
 ---
 
 # Background
